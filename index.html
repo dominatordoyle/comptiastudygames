@@ -357,6 +357,13 @@
     </div>
 
     <script>
+        // Password Prompt - Added Here
+        const code = prompt("Enter your access code from Payhip:");
+        if (code !== "A+ROCKS") {
+            alert("Wrong code! Buy it at my Payhip store.");
+            window.location.href = "https://payhip.com/yourstore"; // Replace with your actual Payhip store URL later
+        }
+
         // Single AudioContext instance to prevent leaks
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
