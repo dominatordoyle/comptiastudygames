@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA A+ Annihilator Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.5s;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .mode-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        button.active {
+            background: #004085;
+            transform: scale(1.1);
+        }
+        button.inactive {
+            background: #6c757d;
+        }
+        .flashcard-container, .matching-container {
+            display: none;
+        }
+        .flashcard {
+            width: 400px;
+            height: 250px;
+            max-width: 100%; /* Responsive fix */
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            perspective: 1000px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .flashcard-front {
+            background: #f9f9f9;
+        }
+        .flashcard-back {
+            background: #e0f7fa;
+            transform: rotateY(180deg);
+        }
+        .matching-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .matching-status {
+            width: 100%;
+            text-align: center;
+        }
+        .matching-content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 20px;
+        }
+        .matching-terms, .matching-definitions {
+            width: 48%;
+            height: 300px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid #333;
+            overflow-y: auto;
+        }
+        .matching-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #000;
+            font-size: 1em;
+            font-weight: 500;
+            transition: transform 0.3s ease-in-out, opacity 0.5s, box-shadow 0.3s;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .matching-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        .selected {
+            background: #bbdefb;
+            border: 2px solid #1976d2;
+            transform: scale(1.1);
+        }
+        .correct {
+            background: #c8e6c9;
+            border: 2px solid #388e3c;
+            color: #2e7d32;
+            animation: pop 0.5s forwards;
+            position: relative;
+        }
+        .incorrect {
+            background: #ffcdd2;
+            border: 2px solid #d32f2f;
+            color: #c62828;
+            animation: shake 0.3s;
+        }
+        h3 {
+            color: #1e3c72;
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+        #matches-left, #score, #section-label, #progress {
+            color: #1e3c72;
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+        .category-key {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+        .category-key button {
+            margin: 5px; /* Increased spacing */
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #333;
+            transition: transform 0.3s, border 0.3s, background 0.3s;
+        }
+        .category-key button.active-category {
+            border: 2px solid #1e3c72;
+            transform: scale(1.1);
+        }
+        .category-key button:hover {
+            background: rgba(0, 123, 255, 0.2);
+        }
+        .mobile { background: #e3f2fd; }
+        .networking { background: #b3e5fc; }
+        .hardware { background: #c8e6c9; }
+        .virt-cloud { background: #f3e5f5; }
+        .troubleshooting { background: #fff3e0; }
+        .os { background: #f0f4c3; }
+        .security { background: #ffcdd2; }
+        .soft-trouble { background: #dcedc8; }
+        .ops { background: #e0f7fa; }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: confetti-fall 1s ease-out forwards;
+        }
+        #victory-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            font-size: 2em;
+            color: #388e3c;
+            display: none;
+            animation: slide-in 0.5s ease-in-out, pulse 1s infinite;
+        }
+        .progress-bar {
+            width: 80%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin: 10px auto;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #388e3c;
+            transition: width 0.5s ease;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            z-index: 1000;
+        }
+        .modal h4 {
+            color: #1e3c72;
+            margin: 0 0 10px 0;
+        }
+        .modal p {
+            color: #333;
+            margin: 10px 0;
+        }
+        .modal button {
+            background: #388e3c;
+            margin: 0 auto;
+            display: block;
+        }
+        .modal button:hover {
+            background: #2e7d32;
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
+        }
+        @keyframes slide-in {
+            0% { transform: translate(-50%, -100%); opacity: 0; }
+            100% { transform: translate(-50%, -50%); opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CompTIA A+ Annihilator Game</h1>
+        <div class="mode-toggle">
+            <button id="flashcard-btn" onclick="showFlashcards()" aria-label="Switch to Flashcard Mode">Flashcard Mode</button>
+            <button id="matching-btn" onclick="showMatching()" aria-label="Switch to Matching Mode">Matching Mode</button>
+        </div>
+
+        <!-- Flashcard Mode -->
+        <div id="flashcard-container" class="flashcard-container">
+            <div id="flashcard" class="flashcard">
+                <div class="flashcard-front"></div>
+                <div class="flashcard-back"></div>
+            </div>
+            <button onclick="nextFlashcard()">Next Card</button>
+        </div>
+
+        <!-- Matching Mode -->
+        <div id="matching-container" class="matching-container">
+            <div class="matching-status">
+                <div id="matches-left"></div>
+                <div id="score"></div>
+                <div id="progress"></div>
+                <div id="section-label"></div>
+            </div>
+            <div class="category-key" id="category-key">
+                <button class="mobile" data-category="mobile" onclick="switchCategory('mobile')">Mobile</button>
+                <button class="networking" data-category="networking" onclick="switchCategory('networking')">Networking</button>
+                <button class="hardware" data-category="hardware" onclick="switchCategory('hardware')">Hardware</button>
+                <button class="virt-cloud" data-category="virt-cloud" onclick="switchCategory('virt-cloud')">Virt/Cloud</button>
+                <button class="troubleshooting" data-category="troubleshooting" onclick="switchCategory('troubleshooting')">Troubleshooting</button>
+                <button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
+                <button class="security" data-category="security" onclick="switchCategory('security')">Security</button>
+                <button class="soft-trouble" data-category="soft-trouble" onclick="switchCategory('soft-trouble')">Software Trouble</button>
+                <button class="ops" data-category="ops" onclick="switchCategory('ops')">Ops</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="matching-content">
+                <div class="matching-terms" id="matching-terms"></div>
+                <div class="matching-definitions" id="matching-definitions"></div>
+            </div>
+            <div style="width: 100%; text-align: center; margin-top: 20px;">
+                <button onclick="resetMatching()">Reset</button>
+            </div>
+        </div>
+        <div id="victory-message">A+ Master!</div>
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div id="explanation-modal" class="modal" role="dialog" aria-labelledby="modal-title">
+            <h4 id="modal-title"></h4>
+            <p id="modal-definition"></p>
+            <p id="modal-explanation"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Password Prompt - Added Here
+        const code = prompt("Enter your access code from Payhip:");
+        if (code !== "A+ROCKS") {
+            alert("Wrong code! Buy it at my Payhip store.");
+            window.location.href = "https://payhip.com/yourstore"; // Replace with your actual Payhip store URL later
+        }
+
+        // Single AudioContext instance to prevent leaks
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Comprehensive Flashcard Data (Covers ALL CompTIA A+ Core 1 & 2 Topics)
+        const flashcards = [
+            // Core 1: Mobile Devices (220-1101)
+            { front: "What connector is used for modern smartphone charging?", back: "USB-C", category: "mobile" },
+            { front: "What does OLED stand for?", back: "Organic Light-Emitting Diode", category: "mobile" },
+            { front: "What protocol syncs email across devices?", back: "IMAP (Internet Message Access Protocol)", category: "mobile" },
+            { front: "What is NFC used for?", back: "Near Field Communication, e.g., contactless payments", category: "mobile" },
+            { front: "How do you access recovery mode on an iPhone?", back: "Press and hold power + volume down, connect to computer", category: "mobile" },
+            { front: "What is the purpose of a digitizer?", back: "Converts touch input to digital signals", category: "mobile" },
+            { front: "What port does POP3 use?", back: "Port 110", category: "mobile" },
+            { front: "What port does SMTP use?", back: "Port 25", category: "mobile" },
+            { front: "What is the difference between eMMC and SSD?", back: "eMMC is slower, integrated flash storage; SSD is faster, standalone", category: "mobile" },
+            { front: "What is LTE?", back: "Long-Term Evolution, 4G mobile standard", category: "mobile" },
+            { front: "What does MDM stand for?", back: "Mobile Device Management", category: "mobile" },
+            { front: "What is a thermal printer?", back: "Uses heat to print on special paper, common in receipts", category: "mobile" },
+            { front: "What is an inkjet printer?", back: "Uses liquid ink sprayed through nozzles", category: "mobile" },
+            { front: "What is a laser printer?", back: "Uses toner and laser to print high-quality text", category: "mobile" },
+
+            // Core 1: Networking
+            { front: "What port does HTTP use?", back: "Port 80", category: "networking" },
+            { front: "What port does HTTPS use?", back: "Port 443", category: "networking" },
+            { front: "What does DHCP do?", back: "Dynamic Host Configuration Protocol, assigns IP addresses", category: "networking" },
+            { front: "What is the default subnet mask for Class C?", back: "255.255.255.0 (/24)", category: "networking" },
+            { front: "What protocol resolves IP to MAC addresses?", back: "ARP (Address Resolution Protocol)", category: "networking" },
+            { front: "What is the speed of CAT6 cable?", back: "Up to 10 Gbps over 55 meters", category: "networking" },
+            { front: "What port does RDP use?", back: "Port 3389", category: "networking" },
+            { front: "What is a VLAN?", back: "Virtual LAN, segments network traffic", category: "networking" },
+            { front: "What port does FTP use?", back: "Port 21", category: "networking" },
+            { front: "What port does SSH use?", back: "Port 22", category: "networking" },
+            { front: "What port does Telnet use?", back: "Port 23", category: "networking" },
+            { front: "What port does SNMP use?", back: "Port 161", category: "networking" },
+            { front: "What port does SMB use?", back: "Port 445", category: "networking" },
+            { front: "What port does LDAP use?", back: "Port 389", category: "networking" },
+            { front: "What is NAT?", back: "Network Address Translation, maps private IPs to public", category: "networking" },
+            { front: "What does APIPA assign?", back: "169.254.x.x when DHCP fails", category: "networking" },
+            { front: "What is the range of a Class A IP?", back: "1.0.0.0 - 126.255.255.255", category: "networking" },
+            { front: "What is the range of a Class B IP?", back: "128.0.0.0 - 191.255.255.255", category: "networking" },
+            { front: "What is QoS?", back: "Quality of Service, prioritizes network traffic", category: "networking" },
+            { front: "What is a WAP?", back: "Wireless Access Point", category: "networking" },
+            { front: "What frequency does 802.11ac use?", back: "5 GHz", category: "networking" },
+            { front: "What is Wi-Fi 6?", back: "802.11ax, faster speeds and better efficiency", category: "networking" },
+
+            // Core 1: Hardware
+            { front: "What is the primary function of a PSU?", back: "Converts AC to DC to power components", category: "hardware" },
+            { front: "What does SATA stand for?", back: "Serial Advanced Technology Attachment", category: "hardware" },
+            { front: "What is the difference between SSD and HDD?", back: "SSD uses flash memory, HDD uses spinning disks", category: "hardware" },
+            { front: "What is a DIMM?", back: "Dual In-line Memory Module (desktop RAM)", category: "hardware" },
+            { front: "What socket type is used for modern Intel CPUs?", back: "LGA (e.g., LGA 1200)", category: "hardware" },
+            { front: "What cable connects a monitor to a GPU?", back: "HDMI, DisplayPort, or DVI", category: "hardware" },
+            { front: "What does BIOS do?", back: "Basic Input/Output System, initializes hardware", category: "hardware" },
+            { front: "What is the purpose of CMOS?", back: "Stores BIOS settings", category: "hardware" },
+            { front: "What is PCIe used for?", back: "Peripheral Component Interconnect Express, high-speed expansion", category: "hardware" },
+            { front: "What is the max speed of USB 3.0?", back: "5 Gbps", category: "hardware" },
+            { front: "What does RAID 0 provide?", back: "Striping, increases speed, no redundancy", category: "hardware" },
+            { front: "What does RAID 1 provide?", back: "Mirroring, full redundancy", category: "hardware" },
+            { front: "What does RAID 5 require?", back: "Minimum 3 drives, parity for redundancy", category: "hardware" },
+            { front: "What does RAID 10 combine?", back: "Striping (RAID 0) and mirroring (RAID 1)", category: "hardware" },
+            { front: "What is an NVMe SSD?", back: "Non-Volatile Memory Express, high-speed SSD over PCIe", category: "hardware" },
+            { front: "What is the max length of a SATA cable?", back: "1 meter", category: "hardware" },
+            { front: "What is a TPM?", back: "Trusted Platform Module, hardware security chip", category: "hardware" },
+
+            // Core 1: Virtualization and Cloud
+            { front: "What is a hypervisor?", back: "Software managing virtual machines (e.g., VMware, Hyper-V)", category: "virt-cloud" },
+            { front: "What is IaaS?", back: "Infrastructure as a Service (e.g., AWS EC2)", category: "virt-cloud" },
+            { front: "What is a thin client?", back: "Device relying on server processing", category: "virt-cloud" },
+            { front: "What does VDI stand for?", back: "Virtual Desktop Infrastructure", category: "virt-cloud" },
+            { front: "What is SaaS?", back: "Software as a Service (e.g., Google Docs)", category: "virt-cloud" },
+            { front: "What is PaaS?", back: "Platform as a Service (e.g., Microsoft Azure)", category: "virt-cloud" },
+            { front: "What is a Type 1 hypervisor?", back: "Runs directly on hardware (e.g., ESXi)", category: "virt-cloud" },
+            { front: "What is a Type 2 hypervisor?", back: "Runs on top of an OS (e.g., VirtualBox)", category: "virt-cloud" },
+            { front: "What is a public cloud?", back: "Cloud services offered over the public internet", category: "virt-cloud" },
+            { front: "What is a private cloud?", back: "Cloud services dedicated to a single organization", category: "virt-cloud" },
+            { front: "What is a hybrid cloud?", back: "Combines public and private cloud resources", category: "virt-cloud" },
+
+            // Core 1: Troubleshooting
+            { front: "First step if a PC won’t power on?", back: "Check power cable and outlet", category: "troubleshooting" },
+            { front: "What causes overheating?", back: "Dust buildup, failed fans, or poor thermal paste", category: "troubleshooting" },
+            { front: "How to fix a printer not printing?", back: "Check connection, drivers, and paper/ink", category: "troubleshooting" },
+            { front: "What does a POST beep indicate?", back: "Hardware failure (e.g., RAM or GPU)", category: "troubleshooting" },
+            { front: "What tool tests cable continuity?", back: "Cable tester", category: "troubleshooting" },
+            { front: "How to resolve intermittent Wi-Fi?", back: "Check for interference, update drivers", category: "troubleshooting" },
+            { front: "What does a blinking amber light on a PC mean?", back: "Power supply or hardware issue", category: "troubleshooting" },
+            { front: "How to fix a 'no boot device' error?", back: "Check boot order in BIOS", category: "troubleshooting" },
+            { front: "How to fix a printer paper jam?", back: "Open printer, gently remove jammed paper", category: "troubleshooting" },
+
+            // Core 2: Operating Systems (220-1102)
+            { front: "Windows command to show IP config?", back: "ipconfig", category: "os" },
+            { front: "Linux command to list directory contents?", back: "ls (dir in Windows)", category: "os" },
+            { front: "What does 'chkdsk' do?", back: "Checks and fixes disk errors", category: "os" },
+            { front: "What is the purpose of 'msconfig'?", back: "Manages startup programs in Windows", category: "os" },
+            { front: "macOS command to repair disk?", back: "diskutil repairDisk", category: "os" },
+            { front: "What is Group Policy?", back: "Manages Windows settings in a domain", category: "os" },
+            { front: "What does 'netstat' show?", back: "Network connections and ports", category: "os" },
+            { front: "What is the Linux 'chmod' command?", back: "Changes file permissions", category: "os" },
+            { front: "What does 'sfc /scannow' do?", back: "Scans and repairs system files", category: "os" },
+            { front: "What is the Windows Registry?", back: "Database of OS and app settings", category: "os" },
+            { front: "What does 'tracert' do?", back: "Traces the route to a network destination", category: "os" },
+            { front: "What is 'diskpart' used for?", back: "Manages disk partitions in Windows", category: "os" },
+            { front: "What does 'grep' do in Linux?", back: "Searches text for patterns", category: "os" },
+            { front: "What does 'gpupdate' do?", back: "Updates Group Policy settings", category: "os" },
+            { front: "What does 'sudo' do in Linux?", back: "Runs commands as superuser", category: "os" },
+            { front: "What does 'net use' do?", back: "Maps network drives in Windows", category: "os" },
+            { front: "What does 'ps' do in Linux?", back: "Lists running processes", category: "os" },
+
+            // Core 2: Security
+            { front: "What is phishing?", back: "Social engineering via fraudulent emails", category: "security" },
+            { front: "What does AES stand for?", back: "Advanced Encryption Standard", category: "security" },
+            { front: "What is MFA?", back: "Multi-Factor Authentication", category: "security" },
+            { front: "What is a DDoS attack?", back: "Distributed Denial of Service, overwhelms a server", category: "security" },
+            { front: "What encrypts a hard drive in Windows?", back: "BitLocker", category: "security" },
+            { front: "What is a rootkit?", back: "Malware that hides deep in the OS", category: "security" },
+            { front: "What does SSL/TLS do?", back: "Encrypts data over networks", category: "security" },
+            { front: "What is a VPN?", back: "Virtual Private Network, secures connections", category: "security" },
+            { front: "What is ransomware?", back: "Malware that encrypts data for ransom", category: "security" },
+            { front: "What is a brute force attack?", back: "Tries all password combinations", category: "security" },
+            { front: "What does EFS stand for?", back: "Encrypting File System (Windows)", category: "security" },
+            { front: "What is a keylogger?", back: "Records keystrokes to steal data", category: "security" },
+            { front: "What is tailgating?", back: "Unauthorized entry by following someone", category: "security" },
+            { front: "What is a strong password?", back: "Long, complex, with letters, numbers, symbols", category: "security" },
+            { front: "What is pretexting?", back: "Social engineering using a false scenario", category: "security" },
+
+            // Core 2: Software Troubleshooting
+            { front: "Cause of a BSOD?", back: "Driver conflicts or hardware failure", category: "soft-trouble" },
+            { front: "How to fix slow OS performance?", back: "Run disk cleanup, check for malware", category: "soft-trouble" },
+            { front: "What does 'taskkill' do?", back: "Terminates processes in Windows", category: "soft-trouble" },
+            { front: "What causes app crashes?", back: "Corrupted files, insufficient RAM, or incompatibility", category: "soft-trouble" },
+            { front: "How to remove malware?", back: "Run antivirus or anti-malware tools", category: "soft-trouble" },
+            { front: "What is Safe Mode?", back: "Boots OS with minimal drivers", category: "soft-trouble" },
+            { front: "What does 'DISM' do?", back: "Repairs Windows image (e.g., DISM /Online /Cleanup-Image /RestoreHealth)", category: "soft-trouble" },
+            { front: "How to fix a frozen app?", back: "Use Task Manager to end task", category: "soft-trouble" },
+
+            // Core 2: Operational Procedures
+            { front: "First step in CompTIA troubleshooting?", back: "Identify the problem", category: "ops" },
+            { front: "What is ESD?", back: "Electrostatic Discharge, damages components", category: "ops" },
+            { front: "What is an RMA?", back: "Return Merchandise Authorization", category: "ops" },
+            { front: "What backup type saves only changed files?", back: "Incremental", category: "ops" },
+            { front: "What is a differential backup?", back: "Backs up files changed since last full backup", category: "ops" },
+            { front: "What is the purpose of a surge protector?", back: "Protects against voltage spikes", category: "ops" },
+            { front: "What is a UPS?", back: "Uninterruptible Power Supply, provides backup power", category: "ops" },
+            { front: "What does PHI stand for?", back: "Protected Health Information", category: "ops" }
+        ];
+
+        // Comprehensive Matching Data with Categories
+        const matchingPairs = [
+            // Core 1: Mobile Devices
+            { term: "USB-C", definition: "Modern smartphone charging connector", category: "mobile" },
+            { term: "OLED", definition: "Organic Light-Emitting Diode display", category: "mobile" },
+            { term: "IMAP", definition: "Syncs email across devices", category: "mobile" },
+            { term: "NFC", definition: "Enables contactless payments", category: "mobile" },
+            { term: "Digitizer", definition: "Converts touch to digital signals", category: "mobile" },
+            { term: "POP3", definition: "Downloads email, port 110", category: "mobile" },
+            { term: "SMTP", definition: "Sends email, port 25", category: "mobile" },
+            { term: "LTE", definition: "4G mobile standard", category: "mobile" },
+            { term: "Thermal Printer", definition: "Uses heat for receipt printing", category: "mobile" },
+            { term: "Inkjet Printer", definition: "Uses liquid ink through nozzles", category: "mobile" },
+            { term: "Laser Printer", definition: "Uses toner and laser for printing", category: "mobile" },
+
+            // Core 1: Networking
+            { term: "DHCP", definition: "Assigns IP addresses automatically", category: "networking" },
+            { term: "TCP", definition: "Reliable, connection-oriented protocol", category: "networking" },
+            { term: "UDP", definition: "Fast, connectionless protocol", category: "networking" },
+            { term: "DNS", definition: "Resolves domain names to IP (port 53)", category: "networking" },
+            { term: "CAT6", definition: "Supports 10 Gbps over 55 meters", category: "networking" },
+            { term: "RDP", definition: "Remote Desktop Protocol (port 3389)", category: "networking" },
+            { term: "VLAN", definition: "Segments network traffic", category: "networking" },
+            { term: "APIPA", definition: "Automatic Private IP Addressing (169.254.x.x)", category: "networking" },
+            { term: "FTP", definition: "File Transfer Protocol (port 21)", category: "networking" },
+            { term: "SSH", definition: "Secure Shell (port 22)", category: "networking" },
+            { term: "NAT", definition: "Maps private IPs to public", category: "networking" },
+            { term: "SNMP", definition: "Simple Network Management Protocol (port 161)", category: "networking" },
+            { term: "Telnet", definition: "Unsecure remote access (port 23)", category: "networking" },
+            { term: "QoS", definition: "Prioritizes network traffic", category: "networking" },
+            { term: "SMB", definition: "File sharing protocol (port 445)", category: "networking" },
+            { term: "LDAP", definition: "Directory access protocol (port 389)", category: "networking" },
+            { term: "Wi-Fi 6", definition: "802.11ax, faster and more efficient", category: "networking" },
+
+            // Core 1: Hardware
+            { term: "SATA", definition: "Connects SSDs and HDDs", category: "hardware" },
+            { term: "DIMM", definition: "Desktop RAM module", category: "hardware" },
+            { term: "SO-DIMM", definition: "Laptop RAM module", category: "hardware" },
+            { term: "PSU", definition: "Converts AC to DC power", category: "hardware" },
+            { term: "PCIe", definition: "High-speed expansion slot", category: "hardware" },
+            { term: "BIOS", definition: "Initializes hardware at boot", category: "hardware" },
+            { term: "M.2", definition: "Compact SSD form factor", category: "hardware" },
+            { term: "RAID 0", definition: "Striping, no redundancy", category: "hardware" },
+            { term: "RAID 1", definition: "Mirroring, full redundancy", category: "hardware" },
+            { term: "RAID 5", definition: "Parity, requires 3+ drives", category: "hardware" },
+            { term: "NVMe", definition: "High-speed SSD over PCIe", category: "hardware" },
+            { term: "TPM", definition: "Hardware security chip", category: "hardware" },
+
+            // Core 1: Virtualization and Cloud
+            { term: "Hypervisor", definition: "Manages virtual machines", category: "virt-cloud" },
+            { term: "IaaS", definition: "Infrastructure as a Service", category: "virt-cloud" },
+            { term: "PaaS", definition: "Platform as a Service", category: "virt-cloud" },
+            { term: "SaaS", definition: "Software as a Service", category: "virt-cloud" },
+            { term: "VDI", definition: "Virtual Desktop Infrastructure", category: "virt-cloud" },
+            { term: "Type 1 Hypervisor", definition: "Runs directly on hardware", category: "virt-cloud" },
+            { term: "Public Cloud", definition: "Services over the public internet", category: "virt-cloud" },
+            { term: "Private Cloud", definition: "Dedicated to one organization", category: "virt-cloud" },
+            { term: "Hybrid Cloud", definition: "Combines public and private clouds", category: "virt-cloud" },
+
+            // Core 1: Troubleshooting
+            { term: "POST", definition: "Power-On Self-Test", category: "troubleshooting" },
+            { term: "Overheating", definition: "Caused by dust or poor cooling", category: "troubleshooting" },
+            { term: "No Display", definition: "Check monitor cable or GPU", category: "troubleshooting" },
+            { term: "Cable Tester", definition: "Tests cable continuity", category: "troubleshooting" },
+            { term: "Intermittent Wi-Fi", definition: "Check interference or drivers", category: "troubleshooting" },
+            { term: "Paper Jam", definition: "Open printer, remove jammed paper", category: "troubleshooting" },
+
+            // Core 2: Operating Systems
+            { term: "ipconfig", definition: "Shows IP configuration in Windows", category: "os" },
+            { term: "chmod", definition: "Changes file permissions in Linux", category: "os" },
+            { term: "msconfig", definition: "Manages Windows startup", category: "os" },
+            { term: "regedit", definition: "Edits Windows Registry", category: "os" },
+            { term: "Task Manager", definition: "Monitors running processes", category: "os" },
+            { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
+            { term: "netstat", definition: "Shows network connections", category: "os" },
+            { term: "tracert", definition: "Traces network route", category: "os" },
+            { term: "diskpart", definition: "Manages disk partitions", category: "os" },
+            { term: "gpupdate", definition: "Updates Group Policy settings", category: "os" },
+            { term: "sudo", definition: "Runs commands as superuser in Linux", category: "os" },
+            { term: "net use", definition: "Maps network drives in Windows", category: "os" },
+            { term: "ps", definition: "Lists running processes in Linux", category: "os" },
+
+            // Core 2: Security
+            { term: "AES", definition: "Symmetric encryption algorithm", category: "security" },
+            { term: "MFA", definition: "Multi-Factor Authentication", category: "security" },
+            { term: "Phishing", definition: "Fraudulent email attack", category: "security" },
+            { term: "Ransomware", definition: "Encrypts data for ransom", category: "security" },
+            { term: "BitLocker", definition: "Encrypts Windows drives", category: "security" },
+            { term: "DDoS", definition: "Overwhelms a server", category: "security" },
+            { term: "Rootkit", definition: "Hides deep in the OS", category: "security" },
+            { term: "SSL/TLS", definition: "Encrypts network data", category: "security" },
+            { term: "Keylogger", definition: "Records keystrokes to steal data", category: "security" },
+            { term: "Tailgating", definition: "Unauthorized entry by following", category: "security" },
+            { term: "Strong Password", definition: "Long, complex, with mixed characters", category: "security" },
+            { term: "Pretexting", definition: "Social engineering with a false scenario", category: "security" },
+
+            // Core 2: Software Troubleshooting
+            { term: "BSOD", definition: "Blue Screen of Death", category: "soft-trouble" },
+            { term: "sfc /scannow", definition: "Repairs system files", category: "soft-trouble" },
+            { term: "Taskkill", definition: "Terminates processes in Windows", category: "soft-trouble" },
+            { term: "Safe Mode", definition: "Boots with minimal drivers", category: "soft-trouble" },
+            { term: "DISM", definition: "Repairs Windows image", category: "soft-trouble" },
+
+            // Core 2: Operational Procedures
+            { term: "ESD", definition: "Electrostatic Discharge", category: "ops" },
+            { term: "RMA", definition: "Return Merchandise Authorization", category: "ops" },
+            { term: "Incremental", definition: "Backup of changed files only", category: "ops" },
+            { term: "Differential", definition: "Backs up changes since last full", category: "ops" },
+            { term: "UPS", definition: "Provides backup power", category: "ops" }
+        ];
+
+        // Explanations for Correct Matches (No Acronyms in Explanations)
+        const explanations = {
+            // Mobile Devices
+            "USB-C": "The Universal Serial Bus Type-C connector is the standard for charging modern smartphones because it’s small, reversible, and supports fast charging and data transfer.",
+            "OLED": "An Organic Light-Emitting Diode display uses organic compounds to emit light, making it ideal for mobile devices due to its thinness, energy efficiency, and vibrant colors.",
+            "IMAP": "The Internet Message Access Protocol keeps email synchronized across multiple devices by storing messages on a server, allowing you to access the same emails from your phone, tablet, or computer.",
+            "NFC": "Near Field Communication enables contactless payments by allowing devices to exchange data wirelessly over a short distance, like when you tap your phone to pay at a store.",
+            "Digitizer": "A digitizer converts your touch on a screen into digital signals that the device understands, enabling features like tapping and swiping on a touchscreen.",
+            "POP3": "The Post Office Protocol version 3 downloads emails from a server to your device using port 110, making it useful for offline access but not for syncing across devices.",
+            "SMTP": "The Simple Mail Transfer Protocol sends emails from your device to a server using port 25, acting as the delivery system for outgoing messages.",
+            "LTE": "Long-Term Evolution is a fourth-generation mobile standard that provides fast internet speeds on cellular networks, improving video streaming and web browsing on phones.",
+            "Thermal Printer": "A thermal printer uses heat to print on special paper, commonly used for receipts because it’s fast, quiet, and doesn’t need ink.",
+            "Inkjet Printer": "An inkjet printer sprays liquid ink through tiny nozzles onto paper, offering affordable color printing for photos and documents.",
+            "Laser Printer": "A laser printer uses toner powder and a laser to create high-quality text and images, making it efficient for large print jobs.",
+
+            // Networking
+            "DHCP": "The Dynamic Host Configuration Protocol automatically assigns Internet Protocol addresses to devices on a network, simplifying setup by providing unique identifiers without manual input.",
+            "TCP": "The Transmission Control Protocol ensures reliable data delivery by establishing a connection between devices, checking for errors, and retransmitting if needed.",
+            "UDP": "The User Datagram Protocol sends data quickly without establishing a connection, prioritizing speed over reliability, useful for streaming or gaming.",
+            "DNS": "The Domain Name System translates website names into Internet Protocol addresses using port 53, allowing you to visit sites by name instead of numbers.",
+            "CAT6": "Category 6 cable supports data transfer speeds up to 10 gigabits per second over 55 meters, making it a high-performance option for modern networks.",
+            "RDP": "The Remote Desktop Protocol allows you to control a computer remotely using port 3389, providing access to its desktop over a network.",
+            "VLAN": "A Virtual Local Area Network segments network traffic into separate groups, improving security and organization without needing extra hardware.",
+            "APIPA": "Automatic Private Internet Protocol Addressing assigns a special address starting with 169.254 when a network device can’t get one from a server, keeping it functional locally.",
+            "FTP": "The File Transfer Protocol moves files between devices over a network using port 21, commonly used for uploading or downloading data.",
+            "SSH": "Secure Shell provides a safe way to access and manage devices remotely using port 22, encrypting data to protect it from interception.",
+            "NAT": "Network Address Translation converts private Internet Protocol addresses to a public one, allowing multiple devices to share a single internet connection.",
+            "SNMP": "The Simple Network Management Protocol monitors and manages network devices using port 161, collecting performance data like bandwidth usage.",
+            "Telnet": "Telnet offers remote access to devices over a network using port 23, but it’s unsecure because it doesn’t encrypt data.",
+            "QoS": "Quality of Service prioritizes certain types of network traffic, ensuring important data like video calls get through smoothly even during congestion.",
+            "SMB": "The Server Message Block protocol shares files and printers over a network using port 445, common in Windows environments.",
+            "LDAP": "The Lightweight Directory Access Protocol accesses and manages directory information over a network using port 389, often for user authentication.",
+            "Wi-Fi 6": "The 802.11ax standard improves wireless networking with faster speeds and better efficiency, handling more devices at once compared to older versions.",
+
+            // Hardware
+            "SATA": "Serial Advanced Technology Attachment connects storage drives like solid-state drives and hard disk drives to a computer’s motherboard, providing fast data transfer.",
+            "DIMM": "A Dual In-line Memory Module is a type of random access memory used in desktop computers, offering high-speed storage for running programs.",
+            "SO-DIMM": "A Small Outline Dual In-line Memory Module is a compact random access memory type designed for laptops, fitting their smaller size.",
+            "PSU": "The Power Supply Unit converts alternating current from the wall into direct current to power computer components, ensuring they operate correctly.",
+            "PCIe": "Peripheral Component Interconnect Express is a high-speed slot that connects expansion cards like graphics or sound cards to the motherboard.",
+            "BIOS": "The Basic Input/Output System starts a computer by initializing its hardware, providing the foundation for the operating system to load.",
+            "M.2": "The M.2 form factor is a compact design for solid-state drives, offering fast storage in a small size for modern computers.",
+            "RAID 0": "Redundant Array of Independent Disks level 0 splits data across multiple drives for faster access, but offers no backup if a drive fails.",
+            "RAID 1": "Redundant Array of Independent Disks level 1 duplicates data across drives, ensuring redundancy so data isn’t lost if one drive fails.",
+            "RAID 5": "Redundant Array of Independent Disks level 5 uses three or more drives with parity information, balancing speed and data protection.",
+            "NVMe": "Non-Volatile Memory Express is a high-speed interface for solid-state drives using Peripheral Component Interconnect Express, offering faster data access than older methods.",
+            "TPM": "The Trusted Platform Module is a chip that enhances security by storing encryption keys and verifying system integrity.",
+
+            // Virtualization and Cloud
+            "Hypervisor": "A hypervisor manages virtual machines by running them as separate systems on a single physical computer, optimizing resource use.",
+            "IaaS": "Infrastructure as a Service provides virtual computing resources like servers and storage over the internet, reducing the need for physical hardware.",
+            "PaaS": "Platform as a Service offers a development environment over the internet, simplifying software creation without managing underlying systems.",
+            "SaaS": "Software as a Service delivers applications over the internet, allowing users to access tools like email or documents without installing them locally.",
+            "VDI": "Virtual Desktop Infrastructure creates virtual desktops hosted on a server, letting users access a full desktop environment remotely.",
+            "Type 1 Hypervisor": "A Type 1 hypervisor runs directly on computer hardware, efficiently managing virtual machines without an underlying operating system.",
+            "Public Cloud": "Public cloud services are offered over the internet to anyone, providing scalable resources like storage or computing power.",
+            "Private Cloud": "A private cloud is dedicated to one organization, offering secure, exclusive access to computing resources.",
+            "Hybrid Cloud": "A hybrid cloud combines public and private cloud resources, allowing flexibility between shared and dedicated systems.",
+
+            // Troubleshooting
+            "POST": "The Power-On Self-Test checks a computer’s hardware when it starts, ensuring components like memory and storage are working.",
+            "Overheating": "Overheating happens when dust blocks airflow or cooling fails, causing components to get too hot and potentially fail.",
+            "No Display": "No display on a monitor often means the cable or graphics processing unit isn’t connected properly, requiring a check.",
+            "Cable Tester": "A cable tester checks if a network cable’s wires are continuous, ensuring it can carry data without breaks.",
+            "Intermittent Wi-Fi": "Intermittent wireless internet can result from signal interference or outdated drivers, needing troubleshooting to stabilize.",
+            "Paper Jam": "A paper jam occurs when paper gets stuck in a printer, fixed by opening it and carefully removing the obstruction.",
+
+            // Operating Systems
+            "ipconfig": "The ipconfig command in Windows displays the current Internet Protocol configuration, showing details like your device’s address.",
+            "chmod": "The chmod command in Linux changes file permissions, controlling who can read, write, or execute a file.",
+            "msconfig": "The msconfig tool in Windows manages which programs start automatically, helping optimize boot time.",
+            "regedit": "The regedit tool edits the Windows Registry, a database that stores operating system and application settings.",
+            "Task Manager": "Task Manager monitors running processes on a computer, letting you see and stop active programs or services.",
+            "chkdsk": "The chkdsk command checks a disk for errors and fixes them, ensuring data storage remains reliable.",
+            "netstat": "The netstat command shows active network connections and ports, helping diagnose network activity.",
+            "tracert": "The tracert command traces the path data takes to a network destination, identifying where delays occur.",
+            "diskpart": "The diskpart tool manages disk partitions in Windows, allowing you to create, delete, or format storage sections.",
+            "gpupdate": "The gpupdate command refreshes Group Policy settings in Windows, applying new rules in a network environment.",
+            "sudo": "The sudo command in Linux lets a user run commands with superuser privileges, granting high-level access when needed.",
+            "net use": "The net use command in Windows connects to network drives, linking shared storage to your computer.",
+            "ps": "The ps command in Linux lists running processes, showing what programs or tasks are active.",
+
+            // Security
+            "AES": "The Advanced Encryption Standard is a symmetric encryption method that scrambles data with a single key, widely used for its strength.",
+            "MFA": "Multi-Factor Authentication requires multiple verification steps, like a password and a code, to enhance security.",
+            "Phishing": "Phishing uses fake emails to trick people into sharing sensitive information, posing as legitimate sources.",
+            "Ransomware": "Ransomware locks data by encrypting it and demands payment to unlock it, acting as a digital hostage situation.",
+            "BitLocker": "BitLocker encrypts entire Windows drives, protecting data from unauthorized access if a device is lost or stolen.",
+            "DDoS": "A Distributed Denial of Service attack floods a server with traffic from many sources, making it unavailable to users.",
+            "Rootkit": "A rootkit is malicious software that hides deep within an operating system, making it hard to detect and remove.",
+            "SSL/TLS": "Secure Sockets Layer and Transport Layer Security encrypt data sent over networks, keeping communications private.",
+            "Keylogger": "A keylogger records every keystroke you type, aiming to steal passwords or other sensitive information.",
+            "Tailgating": "Tailgating is when someone sneaks into a secure area by following an authorized person, bypassing entry controls.",
+            "Strong Password": "A strong password is long and complex, mixing letters, numbers, and symbols to make it hard to guess.",
+            "Pretexting": "Pretexting tricks people into giving information by creating a fake scenario, like pretending to be a coworker.",
+
+            // Software Troubleshooting
+            "BSOD": "The Blue Screen of Death appears when a Windows system crashes due to serious errors like driver issues.",
+            "sfc /scannow": "The sfc /scannow command scans and repairs critical system files in Windows, fixing corruption.",
+            "Taskkill": "The taskkill command stops running processes in Windows, useful for closing unresponsive programs.",
+            "Safe Mode": "Safe Mode starts an operating system with only essential drivers, helping troubleshoot issues.",
+            "DISM": "Deployment Image Servicing and Management repairs a Windows system image, restoring damaged components.",
+
+            // Operational Procedures
+            "ESD": "Electrostatic Discharge can damage computer parts with static electricity, requiring careful handling.",
+            "RMA": "Return Merchandise Authorization is a process to return faulty products for repair or replacement.",
+            "Incremental": "An incremental backup saves only files changed since the last backup, speeding up the process.",
+            "Differential": "A differential backup saves all changes since the last full backup, offering a balance of speed and coverage.",
+            "UPS": "An Uninterruptible Power Supply provides temporary power during outages, protecting against data loss."
+        };
+
+        let currentFlashcard = 0;
+        let selectedTerm = null;
+        let matchesRemaining = 0;
+        let score = 0;
+        let currentSection = 0;
+        let completedSections = new Set();
+        const categoryOrder = ["mobile", "networking", "hardware", "virt-cloud", "troubleshooting", "os", "security", "soft-trouble", "ops"];
+        const categoryNames = {
+            "mobile": "Mobile Devices",
+            "networking": "Networking",
+            "hardware": "Hardware",
+            "virt-cloud": "Virtualization & Cloud",
+            "troubleshooting": "Troubleshooting",
+            "os": "Operating Systems",
+            "security": "Security",
+            "soft-trouble": "Software Troubleshooting",
+            "ops": "Operational Procedures"
+        };
+
+        // Mode Toggle
+        const flashcardBtn = document.getElementById("flashcard-btn");
+        const matchingBtn = document.getElementById("matching-btn");
+
+        function setActiveMode(activeBtn, inactiveBtn) {
+            activeBtn.classList.add("active");
+            activeBtn.classList.remove("inactive");
+            inactiveBtn.classList.add("inactive");
+            inactiveBtn.classList.remove("active");
+        }
+
+        // Flashcard Functions
+        function showFlashcards() {
+            document.getElementById("flashcard-container").style.display = "block";
+            document.getElementById("matching-container").style.display = "none";
+            setActiveMode(flashcardBtn, matchingBtn);
+            loadFlashcard();
+        }
+
+        function loadFlashcard() {
+            const card = document.getElementById("flashcard");
+            const front = document.querySelector(".flashcard-front");
+            const back = document.querySelector(".flashcard-back");
+            front.textContent = flashcards[currentFlashcard].front;
+            back.textContent = flashcards[currentFlashcard].back;
+            card.classList.remove("flipped");
+        }
+
+        function nextFlashcard() {
+            currentFlashcard = (currentFlashcard + 1) % flashcards.length;
+            loadFlashcard();
+        }
+
+        // Add flashcard flip listener once
+        document.getElementById("flashcard").addEventListener("click", function() {
+            this.classList.toggle("flipped");
+        });
+
+        // Matching Functions
+        function showMatching() {
+            document.getElementById("flashcard-container").style.display = "none";
+            document.getElementById("matching-container").style.display = "flex";
+            setActiveMode(matchingBtn, flashcardBtn);
+            currentSection = 0;
+            completedSections.clear();
+            setupMatchingSection();
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function playSound(frequency, duration) {
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), duration);
+        }
+
+        function playVictoryFanfare() {
+            const frequencies = [600, 800, 1000];
+            frequencies.forEach((freq, index) => {
+                const oscillator = audioCtx.createOscillator();
+                oscillator.type = "sine";
+                oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.2);
+                oscillator.connect(audioCtx.destination);
+                oscillator.start(audioCtx.currentTime + index * 0.2);
+                oscillator.stop(audioCtx.currentTime + index * 0.2 + 0.2);
+            });
+        }
+
+        function addConfetti(element, count = 10) {
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `${Math.random() * 100}%`;
+                confetti.style.background = ["#ffd700", "#ff4500", "#00ff00"][Math.floor(Math.random() * 3)];
+                element.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 1000);
+            }
+        }
+
+        function updateActiveCategory() {
+            const categoryButtons = document.querySelectorAll(".category-key button");
+            categoryButtons.forEach(btn => btn.classList.remove("active-category"));
+            const currentCat = categoryOrder[currentSection];
+            const activeBtn = document.querySelector(`.category-key button[data-category="${currentCat}"]`);
+            if (activeBtn) activeBtn.classList.add("active-category");
+        }
+
+        function updateProgressBar() {
+            const progressFill = document.getElementById("progress-fill");
+            const progressPercent = (completedSections.size / categoryOrder.length) * 100;
+            progressFill.style.width = `${progressPercent}%`;
+        }
+
+        function setupMatchingSection() {
+            try {
+                const termsDiv = document.getElementById("matching-terms");
+                const defsDiv = document.getElementById("matching-definitions");
+                const matchesLeftDiv = document.getElementById("matches-left");
+                const scoreDiv = document.getElementById("score");
+                const progressDiv = document.getElementById("progress");
+                const sectionLabel = document.getElementById("section-label");
+                const victoryMessage = document.getElementById("victory-message");
+                const body = document.body;
+
+                termsDiv.innerHTML = "<h3>Terms</h3>";
+                defsDiv.innerHTML = "<h3>Definitions</h3>";
+                victoryMessage.style.display = "none";
+
+                if (completedSections.size === categoryOrder.length) {
+                    matchesLeftDiv.textContent = "Matches Left: 0";
+                    scoreDiv.textContent = `Final Score: ${score}`;
+                    progressDiv.textContent = `Sections Completed: ${completedSections.size}/${categoryOrder.length}`;
+                    sectionLabel.textContent = "Game Complete!";
+                    body.style.background = "linear-gradient(135deg, #2a5298, #388e3c)";
+                    victoryMessage.style.display = "block";
+                    playVictoryFanfare();
+                    addConfetti(victoryMessage, 20);
+                    setTimeout(() => victoryMessage.style.display = "none", 2000);
+                    return;
+                }
+
+                const currentCat = categoryOrder[currentSection];
+                const sectionPairs = matchingPairs.filter(pair => pair.category === currentCat);
+                matchesRemaining = sectionPairs.length;
+                matchesLeftDiv.textContent = `Matches Left: ${matchesRemaining}`;
+                scoreDiv.textContent = `Score: ${score}`;
+                progressDiv.textContent = `Sections Completed: ${completedSections.size}/${categoryOrder.length}`;
+                sectionLabel.textContent = `Section ${currentSection + 1}: ${categoryNames[currentCat]}`;
+                updateActiveCategory();
+                updateProgressBar();
+                body.style.background = `linear-gradient(135deg, #1e3c72, ${getCategoryColor(currentCat)})`;
+
+                const allTerms = sectionPairs.map(p => ({ term: p.term, category: p.category }));
+                const allDefs = shuffle([...sectionPairs]).map(p => ({ def: p.definition, category: p.category }));
+
+                allTerms.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = `matching-item ${item.category}`;
+                    div.textContent = item.term;
+                    div.onclick = () => selectTerm(div);
+                    termsDiv.appendChild(div);
+                });
+
+                allDefs.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = `matching-item ${item.category}`;
+                    div.textContent = item.def;
+                    div.onclick = () => matchTerm(div);
+                    defsDiv.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error setting up matching section:", error);
+                document.getElementById("section-label").textContent = "Error loading section. Please reset.";
+            }
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                "mobile": "#e3f2fd",
+                "networking": "#b3e5fc",
+                "hardware": "#c8e6c9",
+                "virt-cloud": "#f3e5f5",
+                "troubleshooting": "#fff3e0",
+                "os": "#f0f4c3",
+                "security": "#ffcdd2",
+                "soft-trouble": "#dcedc8",
+                "ops": "#e0f7fa"
+            };
+            return colors[category] || "#2a5298";
+        }
+
+        function switchCategory(category) {
+            const index = categoryOrder.indexOf(category);
+            if (index !== -1) {
+                currentSection = index;
+                setupMatchingSection();
+            } else {
+                console.error(`Invalid category: ${category}`);
+            }
+        }
+
+        function selectTerm(item) {
+            if (selectedTerm) selectedTerm.classList.remove("selected");
+            const allItems = document.querySelectorAll(".matching-item");
+            allItems.forEach(i => i.classList.remove("incorrect"));
+            if (item.classList.contains("correct")) return;
+            selectedTerm = item;
+            selectedTerm.classList.add("selected");
+        }
+
+        function showModal(term, definition) {
+            const modal = document.getElementById("explanation-modal");
+            const modalTitle = document.getElementById("modal-title");
+            const modalDefinition = document.getElementById("modal-definition");
+            const modalExplanation = document.getElementById("modal-explanation");
+
+            modalTitle.textContent = `Correct Match: ${term}`;
+            modalDefinition.textContent = `Definition: ${definition}`;
+            modalExplanation.textContent = explanations[term] || "This term matches its definition because it describes a key concept in the CompTIA A+ curriculum.";
+            modal.style.display = "block";
+            document.querySelector(".modal-overlay").style.display = "block";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("explanation-modal");
+            modal.style.display = "none";
+            document.querySelector(".modal-overlay").style.display = "none";
+            if (matchesRemaining === 0) {
+                setTimeout(() => {
+                    completedSections.add(categoryOrder[currentSection]);
+                    playSound(800, 300);
+                    currentSection = (currentSection + 1) % categoryOrder.length;
+                    while (completedSections.has(categoryOrder[currentSection]) && completedSections.size < categoryOrder.length) {
+                        currentSection = (currentSection + 1) % categoryOrder.length;
+                    }
+                    setupMatchingSection();
+                }, 500); // Delay for animations
+            }
+        }
+
+        function matchTerm(defItem) {
+            if (!selectedTerm || defItem.classList.contains("correct")) return;
+            const term = selectedTerm.textContent;
+            const def = defItem.textContent;
+            const pair = matchingPairs.find(p => p.term === term && p.definition === def);
+            const matchesLeftDiv = document.getElementById("matches-left");
+            const scoreDiv = document.getElementById("score");
+
+            if (pair) {
+                selectedTerm.classList.add("correct");
+                defItem.classList.add("correct");
+                selectedTerm.onclick = null;
+                defItem.onclick = null;
+                playSound(600, 200);
+                addConfetti(selectedTerm, 10);
+                addConfetti(defItem, 10);
+                matchesRemaining--;
+                score += 10;
+                matchesLeftDiv.textContent = `Matches Left: ${matchesRemaining}`;
+                scoreDiv.textContent = `Score: ${score}`;
+                showModal(term, def);
+            } else {
+                selectedTerm.classList.add("incorrect");
+                defItem.classList.add("incorrect");
+                playSound(200, 100);
+                score -= 5;
+                scoreDiv.textContent = `Score: ${score}`;
+                setTimeout(() => {
+                    selectedTerm.classList.remove("incorrect");
+                    defItem.classList.remove("incorrect");
+                }, 1000);
+                selectedTerm.classList.remove("selected");
+                selectedTerm = null;
+            }
+        }
+
+        function resetMatching() {
+            currentSection = 0;
+            score = 0;
+            completedSections.clear();
+            document.body.style.background = "linear-gradient(135deg, #1e3c72, #2a5298)";
+            setupMatchingSection();
+        }
+
+        // Initialize with Flashcard Mode
+        showFlashcards();
+    </script>
+</body>
+</html>
