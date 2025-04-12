@@ -322,29 +322,36 @@
         }
         #access-prompt div {
             background: linear-gradient(135deg, #ffffff, #e0f7fa);
-            padding: 30px;
+            padding: 20px;
             border-radius: 15px;
             text-align: center;
-            max-width: 450px;
-            width: 90%;
+            max-width: 90%;
+            width: 400px;
             box-shadow: 0 0 30px rgba(0, 123, 255, 0.7);
             animation: pulse 2s infinite;
+            box-sizing: border-box;
         }
         #access-prompt h2 {
             color: #1e3c72;
-            font-size: 1.8em;
-            margin-bottom: 20px;
+            font-size: 1.5em;
+            line-height: 1.2;
+            margin: 0 0 15px;
             animation: glow 3s infinite;
-            text-transform: uppercase;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
         }
         #access-prompt input {
-            padding: 12px;
-            margin: 15px 0;
-            width: 85%;
+            padding: 10px;
+            margin: 10px 0;
+            width: 90%;
+            max-width: 300px;
             border: 2px solid #007bff;
             border-radius: 8px;
-            font-size: 1.1em;
+            font-size: 1em;
             transition: border-color 0.3s;
+            box-sizing: border-box;
         }
         #access-prompt input:focus {
             border-color: #00ff00;
@@ -354,10 +361,10 @@
             background: #ff4500;
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 10px 25px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: bold;
             transition: background 0.3s, transform 0.2s;
         }
@@ -368,12 +375,74 @@
         #access-prompt p {
             color: #d32f2f;
             font-weight: bold;
-            margin: 15px 0 0;
+            margin: 10px 0 0;
             display: none;
             animation: shake 0.3s;
+            font-size: 0.9em;
         }
         .hidden {
             display: none !important;
+        }
+        /* Mobile-specific adjustments */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            #access-prompt div {
+                padding: 15px;
+                width: 90%;
+                max-width: 350px;
+            }
+            #access-prompt h2 {
+                font-size: 1.2em;
+                margin-bottom: 12px;
+            }
+            #access-prompt input {
+                padding: 8px;
+                font-size: 0.9em;
+                width: 85%;
+            }
+            #access-prompt button {
+                padding: 8px 20px;
+                font-size: 1em;
+            }
+            #access-prompt p {
+                font-size: 0.8em;
+            }
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .flashcard {
+                width: 100%;
+                height: 200px;
+            }
+            .flashcard-front, .flashcard-back {
+                font-size: 1em;
+                padding: 15px;
+            }
+            .matching-terms, .matching-definitions {
+                width: 100%;
+                height: 300px;
+                margin-bottom: 10px;
+            }
+            .matching-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        @media screen and (max-width: 400px) {
+            #access-prompt h2 {
+                font-size: 1em;
+            }
+            #access-prompt div {
+                padding: 12px;
+            }
+            #access-prompt input {
+                width: 80%;
+            }
         }
     </style>
 </head>
@@ -885,7 +954,7 @@
         function showMatching() {
             console.log("Showing matching");
             document.getElementById("flashcard-container").style.display = "none";
-            document.getElementById("matching-container").style.display = "flex";
+            document.getElementById("matching-container").style.display = "flex W;
             setActiveMode(matchingBtn, flashcardBtn);
             currentSection = 0;
             completedSections.clear();
