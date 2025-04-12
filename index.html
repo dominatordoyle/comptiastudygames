@@ -13,6 +13,7 @@
             padding: 0;
             min-height: 100%;
             overflow-x: hidden;
+            box-sizing: border-box;
         }
         .container {
             max-width: 1000px;
@@ -21,6 +22,7 @@
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
         }
         h1 {
             color: #1e3c72;
@@ -41,16 +43,15 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1em;
-            transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+            transition: background 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
         }
         button:hover {
             background: #0056b3;
-            transform: scale(1.05);
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
         button.active {
             background: #004085;
-            transform: scale(1.1);
         }
         button.inactive {
             background: #6c757d;
@@ -70,6 +71,7 @@
             perspective: 1000px;
             transition: transform 0.6s;
             transform-style: preserve-3d;
+            box-sizing: border-box;
         }
         .flashcard.flipped {
             transform: rotateY(180deg);
@@ -120,6 +122,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border: 2px solid #333;
             overflow-y: auto;
+            box-sizing: border-box;
         }
         .matching-item {
             padding: 10px;
@@ -129,25 +132,21 @@
             color: #000;
             font-size: 1em;
             font-weight: 500;
-            transition: transform 0.3s ease-in-out, opacity 0.5s, box-shadow 0.3s;
             overflow-wrap: break-word;
             max-width: 100%;
             box-sizing: border-box;
         }
         .matching-item:hover {
-            transform: translateY(-5px);
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
         .selected {
             background: #bbdefb;
             border: 2px solid #1976d2;
-            transform: scale(1.1);
         }
         .correct {
             background: #c8e6c9;
             border: 2px solid #388e3c;
             color: #2e7d32;
-            position: relative;
         }
         .incorrect {
             background: #ffcdd2;
@@ -177,11 +176,10 @@
             border-radius: 4px;
             cursor: pointer;
             color: #333;
-            transition: transform 0.3s, border 0.3s, background 0.3s;
+            transition: background 0.3s, border 0.3s;
         }
         .category-key button.active-category {
             border: 2px solid #1e3c72;
-            transform: scale(1.1);
         }
         .category-key button:hover {
             background: rgba(0, 123, 255, 0.2);
@@ -207,6 +205,12 @@
             height: 10px;
             background: #ffd700;
             border-radius: 50%;
+            opacity: 1;
+            animation: confetti-fall 1s ease-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100px) rotate(360deg); opacity: 0; }
         }
         #victory-message {
             position: fixed;
@@ -220,6 +224,7 @@
             font-size: 2em;
             color: #388e3c;
             display: none;
+            z-index: 1000;
         }
         .progress-bar {
             width: 80%;
@@ -257,6 +262,7 @@
             max-width: 500px;
             width: 90%;
             z-index: 1000;
+            box-sizing: border-box;
         }
         .modal h4 {
             color: #1e3c72;
@@ -282,37 +288,44 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             z-index: 1001;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
         }
         #access-prompt div {
             position: fixed;
             top: 50%;
             left: 50%;
+            -webkit-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
             background: #fff;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
             width: 90%;
-            max-width: 280px;
+            max-width: 260px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }
         #access-prompt h2 {
             color: #1e3c72;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.2;
-            margin: 0 0 10px;
+            margin: 0 0 8px;
             overflow-wrap: break-word;
             word-break: break-word;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
         }
         #access-prompt input {
             width: 100%;
-            max-width: 240px;
-            padding: 8px;
+            max-width: 220px;
+            padding: 7px;
             margin: 8px 0;
             border: 2px solid #007bff;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 13px;
+            -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }
         #access-prompt input:focus {
@@ -323,20 +336,24 @@
             background: #ff4500;
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 7px 15px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
         }
         #access-prompt button:hover {
             background: #cc3700;
         }
         #access-prompt p {
             color: #d32f2f;
-            font-size: 12px;
+            font-size: 11px;
             margin: 8px 0 0;
             display: none;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
         }
         .hidden {
             display: none !important;
@@ -346,24 +363,24 @@
                 padding: 0;
             }
             #access-prompt div {
-                padding: 12px;
-                max-width: 260px;
+                padding: 10px;
+                max-width: 240px;
             }
             #access-prompt h2 {
-                font-size: 14px;
-                margin-bottom: 8px;
+                font-size: 13px;
+                margin-bottom: 6px;
             }
             #access-prompt input {
-                padding: 7px;
-                font-size: 13px;
-                max-width: 220px;
+                padding: 6px;
+                font-size: 12px;
+                max-width: 200px;
             }
             #access-prompt button {
-                padding: 7px 15px;
-                font-size: 13px;
+                padding: 6px 12px;
+                font-size: 12px;
             }
             #access-prompt p {
-                font-size: 11px;
+                font-size: 10px;
             }
             .container {
                 padding: 10px;
@@ -391,22 +408,22 @@
         }
         @media screen and (max-width: 360px) {
             #access-prompt div {
-                padding: 10px;
-                max-width: 240px;
+                padding: 8px;
+                max-width: 220px;
             }
             #access-prompt h2 {
-                font-size: 13px;
+                font-size: 12px;
             }
             #access-prompt input {
-                max-width: 200px;
-                font-size: 12px;
+                max-width: 180px;
+                font-size: 11px;
             }
             #access-prompt button {
-                padding: 6px 12px;
-                font-size: 12px;
+                padding: 5px 10px;
+                font-size: 11px;
             }
             #access-prompt p {
-                font-size: 10px;
+                font-size: 9px;
             }
         }
     </style>
@@ -415,7 +432,7 @@
     <div id="access-prompt">
         <div>
             <h2>Stick It In: Enter Your A+ Access Code From Gumroad:</h2>
-            <input type="text" id="access-code" placeholder="Drop that code, champ!">
+            <input type="text" id="access-code" placeholder="Drop that code, champ!" aria-label="Enter access code">
             <button onclick="verifyAccess()">Unlock the A+ Annihilator!</button>
             <p id="error-message">Wrong code, try again!</p>
         </div>
@@ -480,12 +497,32 @@
 
     <script>
         let isSubmitting = false;
+        let selectedTerm = null;
+        let matchesRemaining = 0;
+        let score = 0;
+        let currentSection = 0;
+        let currentFlashcard = 0;
+        let completedSections = new Set();
+        const categoryOrder = ["mobile", "networking", "hardware", "virt-cloud", "troubleshooting", "os", "security", "soft-trouble", "ops"];
+        const categoryNames = {
+            "mobile": "Mobile Devices (Core 1)",
+            "networking": "Networking (Core 1)",
+            "hardware": "Hardware (Core 1)",
+            "virt-cloud": "Virtualization & Cloud (Core 1)",
+            "troubleshooting": "Troubleshooting (Core 1)",
+            "os": "Operating Systems (Core 2)",
+            "security": "Security (Core 2)",
+            "soft-trouble": "Software Troubleshooting (Core 2)",
+            "ops": "Operational Procedures (Core 2)"
+        };
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function verifyAccess() {
             if (isSubmitting) return;
             isSubmitting = true;
 
-            const code = document.getElementById("access-code").value.trim();
+            const code = document.getElementById("access-code")?.value.trim();
             const correctCode = "A+IsMyBitch69!";
             const errorMessage = document.getElementById("error-message");
 
@@ -498,22 +535,22 @@
                 isSubmitting = false;
             } else {
                 console.log("Access denied. Incorrect code.");
-                errorMessage.style.display = "block";
-                document.getElementById("access-code").value = "";
-                setTimeout(() => {
-                    errorMessage.style.display = "none";
-                    isSubmitting = false;
-                }, 2000);
+                if (errorMessage) {
+                    errorMessage.style.display = "block";
+                    document.getElementById("access-code").value = "";
+                    setTimeout(() => {
+                        errorMessage.style.display = "none";
+                        isSubmitting = false;
+                    }, 2000);
+                }
             }
         }
 
-        document.getElementById("access-code").addEventListener("keypress", function(event) {
+        document.getElementById("access-code")?.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 verifyAccess();
             }
         });
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         const flashcards = [
             { front: "What connector is standard for modern mobile charging?", back: "USB-C", category: "mobile" },
@@ -822,25 +859,6 @@
             "Change Management": "Change management plans system updates to minimize disruptions and ensure stability."
         };
 
-        let currentFlashcard = 0;
-        let selectedTerm = null;
-        let matchesRemaining = 0;
-        let score = 0;
-        let currentSection = 0;
-        let completedSections = new Set();
-        const categoryOrder = ["mobile", "networking", "hardware", "virt-cloud", "troubleshooting", "os", "security", "soft-trouble", "ops"];
-        const categoryNames = {
-            "mobile": "Mobile Devices (Core 1)",
-            "networking": "Networking (Core 1)",
-            "hardware": "Hardware (Core 1)",
-            "virt-cloud": "Virtualization & Cloud (Core 1)",
-            "troubleshooting": "Troubleshooting (Core 1)",
-            "os": "Operating Systems (Core 2)",
-            "security": "Security (Core 2)",
-            "soft-trouble": "Software Troubleshooting (Core 2)",
-            "ops": "Operational Procedures (Core 2)"
-        };
-
         const flashcardBtn = document.getElementById("flashcard-btn");
         const matchingBtn = document.getElementById("matching-btn");
 
@@ -864,9 +882,11 @@
             const card = document.getElementById("flashcard");
             const front = document.querySelector(".flashcard-front");
             const back = document.querySelector(".flashcard-back");
-            front.textContent = flashcards[currentFlashcard].front;
-            back.textContent = flashcards[currentFlashcard].back;
-            card.classList.remove("flipped");
+            if (front && back && card) {
+                front.textContent = flashcards[currentFlashcard].front;
+                back.textContent = flashcards[currentFlashcard].back;
+                card.classList.remove("flipped");
+            }
         }
 
         function nextFlashcard() {
@@ -874,7 +894,7 @@
             loadFlashcard();
         }
 
-        document.getElementById("flashcard").addEventListener("click", function() {
+        document.getElementById("flashcard")?.addEventListener("click", function() {
             this.classList.toggle("flipped");
         });
 
@@ -885,6 +905,7 @@
             setActiveMode(matchingBtn, flashcardBtn);
             currentSection = 0;
             completedSections.clear();
+            score = 0;
             setupMatchingSection();
         }
 
@@ -939,8 +960,10 @@
 
         function updateProgressBar() {
             const progressFill = document.getElementById("progress-fill");
-            const progressPercent = (completedSections.size / categoryOrder.length) * 100;
-            progressFill.style.width = `${progressPercent}%`;
+            if (progressFill) {
+                const progressPercent = (completedSections.size / categoryOrder.length) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+            }
         }
 
         function setupMatchingSection() {
@@ -955,6 +978,10 @@
                 const victoryMessage = document.getElementById("victory-message");
                 const body = document.body;
 
+                if (!termsDiv || !defsDiv || !matchesLeftDiv || !scoreDiv || !progressDiv || !sectionLabel || !victoryMessage) {
+                    throw new Error("Missing DOM elements for matching section");
+                }
+
                 termsDiv.innerHTML = "<h3>Terms</h3>";
                 defsDiv.innerHTML = "<h3>Definitions</h3>";
                 victoryMessage.style.display = "none";
@@ -968,7 +995,9 @@
                     victoryMessage.style.display = "block";
                     playVictoryFanfare();
                     addConfetti(victoryMessage, 20);
-                    setTimeout(() => victoryMessage.style.display = "none", 2000);
+                    setTimeout(() => {
+                        victoryMessage.style.display = "none";
+                    }, 2000);
                     return;
                 }
 
@@ -1049,17 +1078,25 @@
             const modalDefinition = document.getElementById("modal-definition");
             const modalExplanation = document.getElementById("modal-explanation");
 
-            modalTitle.textContent = `Correct Match: ${term}`;
-            modalDefinition.textContent = `Definition: ${definition}`;
-            modalExplanation.textContent = explanations[term] || "This term is key to the new CompTIA A+ exams.";
-            modal.style.display = "block";
-            document.querySelector(".modal-overlay").style.display = "block";
+            if (modal && modalTitle && modalDefinition && modalExplanation) {
+                modalTitle.textContent = `Correct Match: ${term}`;
+                modalDefinition.textContent = `Definition: ${definition}`;
+                modalExplanation.textContent = explanations[term] || "This term is key to the new CompTIA A+ exams.";
+                modal.style.display = "block";
+                document.querySelector(".modal-overlay").style.display = "block";
+            }
         }
 
         function closeModal() {
             const modal = document.getElementById("explanation-modal");
-            modal.style.display = "none";
-            document.querySelector(".modal-overlay").style.display = "none";
+            const matchedItems = document.querySelectorAll(".matching-item.correct");
+            if (modal) {
+                modal.style.display = "none";
+                document.querySelector(".modal-overlay").style.display = "none";
+            }
+            matchedItems.forEach(item => {
+                item.classList.add("hidden");
+            });
             if (matchesRemaining === 0) {
                 setTimeout(() => {
                     completedSections.add(categoryOrder[currentSection]);
@@ -1095,6 +1132,8 @@
                 matchesLeftDiv.textContent = `Matches Left: ${matchesRemaining}`;
                 scoreDiv.textContent = `Score: ${score}`;
                 showModal(term, def);
+                selectedTerm.classList.remove("selected");
+                selectedTerm = null;
             } else {
                 selectedTerm.classList.add("incorrect");
                 defItem.classList.add("incorrect");
@@ -1104,9 +1143,9 @@
                 setTimeout(() => {
                     selectedTerm.classList.remove("incorrect");
                     defItem.classList.remove("incorrect");
+                    selectedTerm.classList.remove("selected");
+                    selectedTerm = null;
                 }, 1000);
-                selectedTerm.classList.remove("selected");
-                selectedTerm = null;
             }
         }
 
