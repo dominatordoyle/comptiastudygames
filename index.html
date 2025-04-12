@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CompTIA A+ Annihilator Game</title>
+    <title>CompTIA A+ Annihilator Game (New A+ Updated)</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -61,7 +61,7 @@
         .flashcard {
             width: 400px;
             height: 250px;
-            max-width: 100%; /* Responsive fix */
+            max-width: 100%;
             margin: 20px auto;
             background: #fff;
             border-radius: 12px;
@@ -113,7 +113,7 @@
         }
         .matching-terms, .matching-definitions {
             width: 48%;
-            height: 300px;
+            height: 400px;
             padding: 15px;
             background: #fff;
             border-radius: 8px;
@@ -173,7 +173,7 @@
             font-size: 0.9em;
         }
         .category-key button {
-            margin: 5px; /* Increased spacing */
+            margin: 5px;
             padding: 5px 10px;
             border: none;
             border-radius: 4px;
@@ -187,6 +187,12 @@
         }
         .category-key button:hover {
             background: rgba(0, 123, 255, 0.2);
+        }
+        .core1-header, .core2-header {
+            font-weight: bold;
+            color: #1e3c72;
+            margin: 10px 0;
+            font-size: 1.1em;
         }
         .mobile { background: #e3f2fd; }
         .networking { background: #b3e5fc; }
@@ -297,11 +303,91 @@
             50% { transform: translate(-50%, -50%) scale(1.05); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #007bff, 0 0 10px #007bff; }
+            50% { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; }
+            100% { text-shadow: 0 0 5px #007bff, 0 0 10px #007bff; }
+        }
+        #access-prompt {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        #access-prompt div {
+            background: linear-gradient(135deg, #ffffff, #e0f7fa);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 123, 255, 0.7);
+            animation: pulse 2s infinite;
+        }
+        #access-prompt h2 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            animation: glow 3s infinite;
+            text-transform: uppercase;
+        }
+        #access-prompt input {
+            padding: 12px;
+            margin: 15px 0;
+            width: 85%;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: border-color 0.3s;
+        }
+        #access-prompt input:focus {
+            border-color: #00ff00;
+            outline: none;
+        }
+        #access-prompt button {
+            background: #ff4500;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+        #access-prompt button:hover {
+            background: #cc3700;
+            transform: scale(1.1);
+        }
+        #access-prompt p {
+            color: #d32f2f;
+            font-weight: bold;
+            margin: 15px 0 0;
+            display: none;
+            animation: shake 0.3s;
+        }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>CompTIA A+ Annihilator Game</h1>
+    <div id="access-prompt">
+        <div>
+            <h2>Stick It In: Enter Your A+ Access Code From Gumroad:</h2>
+            <input type="password" id="access-code" placeholder="Drop that code, champ!">
+            <button onclick="verifyAccess()">Unlock the A+ Annihilator!</button>
+            <p id="error-message">Wrong code, try again!</p>
+        </div>
+    </div>
+    <div class="container hidden" id="game-content">
+        <h1>CompTIA A+ Annihilator Game (New A+ Updated)</h1>
         <div class="mode-toggle">
             <button id="flashcard-btn" onclick="showFlashcards()" aria-label="Switch to Flashcard Mode">Flashcard Mode</button>
             <button id="matching-btn" onclick="showMatching()" aria-label="Switch to Matching Mode">Matching Mode</button>
@@ -325,11 +411,13 @@
                 <div id="section-label"></div>
             </div>
             <div class="category-key" id="category-key">
+                <div class="core1-header">Core 1 (220-1201)</div>
                 <button class="mobile" data-category="mobile" onclick="switchCategory('mobile')">Mobile</button>
                 <button class="networking" data-category="networking" onclick="switchCategory('networking')">Networking</button>
                 <button class="hardware" data-category="hardware" onclick="switchCategory('hardware')">Hardware</button>
                 <button class="virt-cloud" data-category="virt-cloud" onclick="switchCategory('virt-cloud')">Virt/Cloud</button>
                 <button class="troubleshooting" data-category="troubleshooting" onclick="switchCategory('troubleshooting')">Troubleshooting</button>
+                <div class="core2-header">Core 2 (220-1202)</div>
                 <button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
                 <button class="security" data-category="security" onclick="switchCategory('security')">Security</button>
                 <button class="soft-trouble" data-category="soft-trouble" onclick="switchCategory('soft-trouble')">Software Trouble</button>
@@ -357,378 +445,385 @@
     </div>
 
     <script>
-        // Password Prompt - Added Here
-        const code = prompt("Enter your access code from Gumroad:");
-        if (code !== "A+ROCKS") {
-            alert("Wrong code! Buy it at my Gumroad store.");
-            window.location.href = "https://comptiastudygames.gumroad.com/";
+        function verifyAccess() {
+            const code = document.getElementById("access-code").value;
+            const correctCode = "A+IsMyBitch69!";
+            const errorMessage = document.getElementById("error-message");
+            if (code === correctCode) {
+                document.getElementById("access-prompt").style.display = "none";
+                document.getElementById("game-content").classList.remove("hidden");
+            } else {
+                errorMessage.style.display = "block";
+                document.getElementById("access-code").value = "";
+                setTimeout(() => errorMessage.style.display = "none", 2000);
+            }
         }
 
-        // Single AudioContext instance to prevent leaks
+        // Allow Enter key to submit access code
+        document.getElementById("access-code").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                verifyAccess();
+            }
+        });
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // Comprehensive Flashcard Data (Covers ALL CompTIA A+ Core 1 & 2 Topics)
         const flashcards = [
-            // Core 1: Mobile Devices (220-1101)
-            { front: "What connector is used for modern smartphone charging?", back: "USB-C", category: "mobile" },
-            { front: "What does OLED stand for?", back: "Organic Light-Emitting Diode", category: "mobile" },
+            // Core 1: Mobile Devices (220-1201) - 12 flashcards
+            { front: "What connector is standard for modern mobile charging?", back: "USB-C", category: "mobile" },
+            { front: "What does OLED improve in mobile displays?", back: "Organic Light-Emitting Diode, better color and efficiency", category: "mobile" },
             { front: "What protocol syncs email across devices?", back: "IMAP (Internet Message Access Protocol)", category: "mobile" },
-            { front: "What is NFC used for?", back: "Near Field Communication, e.g., contactless payments", category: "mobile" },
-            { front: "How do you access recovery mode on an iPhone?", back: "Press and hold power + volume down, connect to computer", category: "mobile" },
-            { front: "What is the purpose of a digitizer?", back: "Converts touch input to digital signals", category: "mobile" },
-            { front: "What port does POP3 use?", back: "Port 110", category: "mobile" },
-            { front: "What port does SMTP use?", back: "Port 25", category: "mobile" },
-            { front: "What is the difference between eMMC and SSD?", back: "eMMC is slower, integrated flash storage; SSD is faster, standalone", category: "mobile" },
-            { front: "What is LTE?", back: "Long-Term Evolution, 4G mobile standard", category: "mobile" },
-            { front: "What does MDM stand for?", back: "Mobile Device Management", category: "mobile" },
-            { front: "What is a thermal printer?", back: "Uses heat to print on special paper, common in receipts", category: "mobile" },
-            { front: "What is an inkjet printer?", back: "Uses liquid ink sprayed through nozzles", category: "mobile" },
-            { front: "What is a laser printer?", back: "Uses toner and laser to print high-quality text", category: "mobile" },
+            { front: "What is NFC commonly used for?", back: "Near Field Communication, e.g., mobile payments", category: "mobile" },
+            { front: "What component converts touch to digital input?", back: "Digitizer", category: "mobile" },
+            { front: "What is eSIM technology?", back: "Embedded SIM, programmable SIM in devices", category: "mobile" },
+            { front: "What wireless tech connects mobile accessories?", back: "Bluetooth", category: "mobile" },
+            { front: "What provides fast mobile data?", back: "LTE (Long-Term Evolution)", category: "mobile" },
+            { front: "What configures mobile network access?", back: "APN (Access Point Name)", category: "mobile" },
+            { front: "What sensor detects device orientation?", back: "Gyroscope", category: "mobile" },
+            { front: "What battery type powers most mobiles?", back: "Li-ion (Lithium-ion)", category: "mobile" },
+            { front: "What manages mobile devices in an org?", back: "MDM (Mobile Device Management)", category: "mobile" },
 
-            // Core 1: Networking
-            { front: "What port does HTTP use?", back: "Port 80", category: "networking" },
+            // Core 1: Networking (220-1201) - 12 flashcards
             { front: "What port does HTTPS use?", back: "Port 443", category: "networking" },
-            { front: "What does DHCP do?", back: "Dynamic Host Configuration Protocol, assigns IP addresses", category: "networking" },
-            { front: "What is the default subnet mask for Class C?", back: "255.255.255.0 (/24)", category: "networking" },
-            { front: "What protocol resolves IP to MAC addresses?", back: "ARP (Address Resolution Protocol)", category: "networking" },
-            { front: "What is the speed of CAT6 cable?", back: "Up to 10 Gbps over 55 meters", category: "networking" },
-            { front: "What port does RDP use?", back: "Port 3389", category: "networking" },
-            { front: "What is a VLAN?", back: "Virtual LAN, segments network traffic", category: "networking" },
-            { front: "What port does FTP use?", back: "Port 21", category: "networking" },
-            { front: "What port does SSH use?", back: "Port 22", category: "networking" },
-            { front: "What port does Telnet use?", back: "Port 23", category: "networking" },
-            { front: "What port does SNMP use?", back: "Port 161", category: "networking" },
-            { front: "What port does SMB use?", back: "Port 445", category: "networking" },
-            { front: "What port does LDAP use?", back: "Port 389", category: "networking" },
-            { front: "What is NAT?", back: "Network Address Translation, maps private IPs to public", category: "networking" },
-            { front: "What does APIPA assign?", back: "169.254.x.x when DHCP fails", category: "networking" },
-            { front: "What is the range of a Class A IP?", back: "1.0.0.0 - 126.255.255.255", category: "networking" },
-            { front: "What is the range of a Class B IP?", back: "128.0.0.0 - 191.255.255.255", category: "networking" },
-            { front: "What is QoS?", back: "Quality of Service, prioritizes network traffic", category: "networking" },
-            { front: "What is a WAP?", back: "Wireless Access Point", category: "networking" },
-            { front: "What frequency does 802.11ac use?", back: "5 GHz", category: "networking" },
-            { front: "What is Wi-Fi 6?", back: "802.11ax, faster speeds and better efficiency", category: "networking" },
+            { front: "What does DHCP assign?", back: "IP addresses dynamically", category: "networking" },
+            { front: "What is a VPN used for?", back: "Secure remote network access", category: "networking" },
+            { front: "What protocol resolves IP to MAC?", back: "ARP (Address Resolution Protocol)", category: "networking" },
+            { front: "What is the speed of Wi-Fi 6E?", back: "Up to 9.6 Gbps, uses 6 GHz band", category: "networking" },
+            { front: "What is Zero Trust in networking?", back: "Verify every device/user, no assumed trust", category: "networking" },
+            { front: "What translates domain names to IPs?", back: "DNS (Domain Name System)", category: "networking" },
+            { front: "What protocol ensures reliable data transfer?", back: "TCP (Transmission Control Protocol)", category: "networking" },
+            { front: "What protocol is fast but connectionless?", back: "UDP (User Datagram Protocol)", category: "networking" },
+            { front: "What maps private IPs to public?", back: "NAT (Network Address Translation)", category: "networking" },
+            { front: "What cable supports 40 Gbps over 30m?", back: "CAT8", category: "networking" },
+            { front: "What identifies a wireless network?", back: "SSID (Service Set Identifier)", category: "networking" },
 
-            // Core 1: Hardware
-            { front: "What is the primary function of a PSU?", back: "Converts AC to DC to power components", category: "hardware" },
-            { front: "What does SATA stand for?", back: "Serial Advanced Technology Attachment", category: "hardware" },
-            { front: "What is the difference between SSD and HDD?", back: "SSD uses flash memory, HDD uses spinning disks", category: "hardware" },
-            { front: "What is a DIMM?", back: "Dual In-line Memory Module (desktop RAM)", category: "hardware" },
-            { front: "What socket type is used for modern Intel CPUs?", back: "LGA (e.g., LGA 1200)", category: "hardware" },
-            { front: "What cable connects a monitor to a GPU?", back: "HDMI, DisplayPort, or DVI", category: "hardware" },
-            { front: "What does BIOS do?", back: "Basic Input/Output System, initializes hardware", category: "hardware" },
-            { front: "What is the purpose of CMOS?", back: "Stores BIOS settings", category: "hardware" },
-            { front: "What is PCIe used for?", back: "Peripheral Component Interconnect Express, high-speed expansion", category: "hardware" },
-            { front: "What is the max speed of USB 3.0?", back: "5 Gbps", category: "hardware" },
-            { front: "What does RAID 0 provide?", back: "Striping, increases speed, no redundancy", category: "hardware" },
-            { front: "What does RAID 1 provide?", back: "Mirroring, full redundancy", category: "hardware" },
-            { front: "What does RAID 5 require?", back: "Minimum 3 drives, parity for redundancy", category: "hardware" },
-            { front: "What does RAID 10 combine?", back: "Striping (RAID 0) and mirroring (RAID 1)", category: "hardware" },
-            { front: "What is an NVMe SSD?", back: "Non-Volatile Memory Express, high-speed SSD over PCIe", category: "hardware" },
-            { front: "What is the max length of a SATA cable?", back: "1 meter", category: "hardware" },
-            { front: "What is a TPM?", back: "Trusted Platform Module, hardware security chip", category: "hardware" },
+            // Core 1: Hardware (220-1201) - 12 flashcards
+            { front: "What powers PC components?", back: "PSU (Power Supply Unit), converts AC to DC", category: "hardware" },
+            { front: "What is NVMe used for?", back: "High-speed SSD interface over PCIe", category: "hardware" },
+            { front: "What connects a GPU to a monitor?", back: "HDMI, DisplayPort, or DVI", category: "hardware" },
+            { front: "What is a TPM’s role?", back: "Trusted Platform Module, secures encryption keys", category: "hardware" },
+            { front: "What is the max USB 4 speed?", back: "40 Gbps", category: "hardware" },
+            { front: "What does RAID 10 combine?", back: "Striping and mirroring", category: "hardware" },
+            { front: "What interface connects storage drives?", back: "SATA (Serial ATA)", category: "hardware" },
+            { front: "What is a common desktop RAM type?", back: "DIMM (Dual In-line Memory Module)", category: "hardware" },
+            { front: "What initializes hardware at boot?", back: "BIOS (Basic Input/Output System)", category: "hardware" },
+            { front: "What is a compact SSD form factor?", back: "M.2", category: "hardware" },
+            { front: "What holds the processor?", back: "CPU Socket (e.g., LGA)", category: "hardware" },
+            { front: "What cools the CPU?", back: "Heatsink", category: "hardware" },
 
-            // Core 1: Virtualization and Cloud
-            { front: "What is a hypervisor?", back: "Software managing virtual machines (e.g., VMware, Hyper-V)", category: "virt-cloud" },
-            { front: "What is IaaS?", back: "Infrastructure as a Service (e.g., AWS EC2)", category: "virt-cloud" },
-            { front: "What is a thin client?", back: "Device relying on server processing", category: "virt-cloud" },
-            { front: "What does VDI stand for?", back: "Virtual Desktop Infrastructure", category: "virt-cloud" },
-            { front: "What is SaaS?", back: "Software as a Service (e.g., Google Docs)", category: "virt-cloud" },
-            { front: "What is PaaS?", back: "Platform as a Service (e.g., Microsoft Azure)", category: "virt-cloud" },
-            { front: "What is a Type 1 hypervisor?", back: "Runs directly on hardware (e.g., ESXi)", category: "virt-cloud" },
-            { front: "What is a Type 2 hypervisor?", back: "Runs on top of an OS (e.g., VirtualBox)", category: "virt-cloud" },
-            { front: "What is a public cloud?", back: "Cloud services offered over the public internet", category: "virt-cloud" },
-            { front: "What is a private cloud?", back: "Cloud services dedicated to a single organization", category: "virt-cloud" },
-            { front: "What is a hybrid cloud?", back: "Combines public and private cloud resources", category: "virt-cloud" },
+            // Core 1: Virtualization and Cloud (220-1201) - 11 flashcards
+            { front: "What manages virtual machines?", back: "Hypervisor (e.g., VMware, Hyper-V)", category: "virt-cloud" },
+            { front: "What is SaaS?", back: "Software as a Service, e.g., cloud apps", category: "virt-cloud" },
+            { front: "What is a hybrid cloud?", back: "Mix of public and private cloud resources", category: "virt-cloud" },
+            { front: "What is client-side virtualization?", back: "Running VMs on a local device", category: "virt-cloud" },
+            { front: "What is IaaS?", back: "Infrastructure as a Service, e.g., virtual servers", category: "virt-cloud" },
+            { front: "What is PaaS?", back: "Platform as a Service, e.g., app development", category: "virt-cloud" },
+            { front: "What delivers virtual desktops?", back: "VDI (Virtual Desktop Infrastructure)", category: "virt-cloud" },
+            { front: "What runs directly on hardware?", back: "Type 1 Hypervisor", category: "virt-cloud" },
+            { front: "What is a shared cloud resource?", back: "Public Cloud", category: "virt-cloud" },
+            { front: "What is a dedicated cloud?", back: "Private Cloud", category: "virt-cloud" },
+            { front: "What is Type 2 Hypervisor?", back: "Runs on top of an OS", category: "virt-cloud" },
 
-            // Core 1: Troubleshooting
-            { front: "First step if a PC won’t power on?", back: "Check power cable and outlet", category: "troubleshooting" },
-            { front: "What causes overheating?", back: "Dust buildup, failed fans, or poor thermal paste", category: "troubleshooting" },
-            { front: "How to fix a printer not printing?", back: "Check connection, drivers, and paper/ink", category: "troubleshooting" },
-            { front: "What does a POST beep indicate?", back: "Hardware failure (e.g., RAM or GPU)", category: "troubleshooting" },
-            { front: "What tool tests cable continuity?", back: "Cable tester", category: "troubleshooting" },
-            { front: "How to resolve intermittent Wi-Fi?", back: "Check for interference, update drivers", category: "troubleshooting" },
-            { front: "What does a blinking amber light on a PC mean?", back: "Power supply or hardware issue", category: "troubleshooting" },
-            { front: "How to fix a 'no boot device' error?", back: "Check boot order in BIOS", category: "troubleshooting" },
-            { front: "How to fix a printer paper jam?", back: "Open printer, gently remove jammed paper", category: "troubleshooting" },
+            // Core 1: Troubleshooting (220-1201) - 11 flashcards
+            { front: "First step if a PC won’t boot?", back: "Check power connections", category: "troubleshooting" },
+            { front: "What causes a CPU to overheat?", back: "Dust, failed fans, or bad thermal paste", category: "troubleshooting" },
+            { front: "How to fix no Wi-Fi signal?", back: "Check adapter, signal strength, interference", category: "troubleshooting" },
+            { front: "What does a POST error beep mean?", back: "Hardware failure detected", category: "troubleshooting" },
+            { front: "What if there’s no display?", back: "Check monitor or GPU connection", category: "troubleshooting" },
+            { front: "What causes slow drive performance?", back: "Failing HDD/SSD", category: "troubleshooting" },
+            { front: "How to fix a printer jam?", back: "Remove stuck paper", category: "troubleshooting" },
+            { front: "What does a blue power light mean?", back: "Check PSU status", category: "troubleshooting" },
+            { front: "What if the network drops?", back: "Test cable or signal", category: "troubleshooting" },
+            { front: "How to fix an overheating GPU?", back: "Clean fans or reapply paste", category: "troubleshooting" },
+            { front: "What if a device isn’t recognized?", back: "Check cables or drivers", category: "troubleshooting" },
 
-            // Core 2: Operating Systems (220-1102)
-            { front: "Windows command to show IP config?", back: "ipconfig", category: "os" },
-            { front: "Linux command to list directory contents?", back: "ls (dir in Windows)", category: "os" },
-            { front: "What does 'chkdsk' do?", back: "Checks and fixes disk errors", category: "os" },
-            { front: "What is the purpose of 'msconfig'?", back: "Manages startup programs in Windows", category: "os" },
-            { front: "macOS command to repair disk?", back: "diskutil repairDisk", category: "os" },
-            { front: "What is Group Policy?", back: "Manages Windows settings in a domain", category: "os" },
-            { front: "What does 'netstat' show?", back: "Network connections and ports", category: "os" },
-            { front: "What is the Linux 'chmod' command?", back: "Changes file permissions", category: "os" },
-            { front: "What does 'sfc /scannow' do?", back: "Scans and repairs system files", category: "os" },
-            { front: "What is the Windows Registry?", back: "Database of OS and app settings", category: "os" },
-            { front: "What does 'tracert' do?", back: "Traces the route to a network destination", category: "os" },
-            { front: "What is 'diskpart' used for?", back: "Manages disk partitions in Windows", category: "os" },
-            { front: "What does 'grep' do in Linux?", back: "Searches text for patterns", category: "os" },
-            { front: "What does 'gpupdate' do?", back: "Updates Group Policy settings", category: "os" },
-            { front: "What does 'sudo' do in Linux?", back: "Runs commands as superuser", category: "os" },
-            { front: "What does 'net use' do?", back: "Maps network drives in Windows", category: "os" },
-            { front: "What does 'ps' do in Linux?", back: "Lists running processes", category: "os" },
+            // Core 2: Operating Systems (220-1202) - 11 flashcards
+            { front: "Windows command for network info?", back: "ipconfig", category: "os" },
+            { front: "Linux command to change permissions?", back: "chmod", category: "os" },
+            { front: "What does 'sfc /scannow' do?", back: "Scans and repairs Windows system files", category: "os" },
+            { front: "What is 'diskpart' used for?", back: "Manages disk partitions", category: "os" },
+            { front: "What does 'net use' map?", back: "Network drives in Windows", category: "os" },
+            { front: "What controls startup programs?", back: "msconfig", category: "os" },
+            { front: "What edits the Windows registry?", back: "regedit", category: "os" },
+            { front: "What checks disk errors?", back: "chkdsk", category: "os" },
+            { front: "Linux command for superuser access?", back: "sudo", category: "os" },
+            { front: "What traces a network route?", back: "tracert", category: "os" },
+            { front: "What shows running processes?", back: "Task Manager", category: "os" },
 
-            // Core 2: Security
-            { front: "What is phishing?", back: "Social engineering via fraudulent emails", category: "security" },
-            { front: "What does AES stand for?", back: "Advanced Encryption Standard", category: "security" },
-            { front: "What is MFA?", back: "Multi-Factor Authentication", category: "security" },
-            { front: "What is a DDoS attack?", back: "Distributed Denial of Service, overwhelms a server", category: "security" },
-            { front: "What encrypts a hard drive in Windows?", back: "BitLocker", category: "security" },
-            { front: "What is a rootkit?", back: "Malware that hides deep in the OS", category: "security" },
-            { front: "What does SSL/TLS do?", back: "Encrypts data over networks", category: "security" },
-            { front: "What is a VPN?", back: "Virtual Private Network, secures connections", category: "security" },
-            { front: "What is ransomware?", back: "Malware that encrypts data for ransom", category: "security" },
-            { front: "What is a brute force attack?", back: "Tries all password combinations", category: "security" },
-            { front: "What does EFS stand for?", back: "Encrypting File System (Windows)", category: "security" },
-            { front: "What is a keylogger?", back: "Records keystrokes to steal data", category: "security" },
-            { front: "What is tailgating?", back: "Unauthorized entry by following someone", category: "security" },
-            { front: "What is a strong password?", back: "Long, complex, with letters, numbers, symbols", category: "security" },
-            { front: "What is pretexting?", back: "Social engineering using a false scenario", category: "security" },
+            // Core 2: Security (220-1202) - 12 flashcards
+            { front: "What is phishing?", back: "Fraudulent emails to steal data", category: "security" },
+            { front: "What does MFA add to security?", back: "Multi-Factor Authentication, extra verification", category: "security" },
+            { front: "What is a DDoS attack?", back: "Floods a server to disrupt service", category: "security" },
+            { front: "What encrypts a Windows drive?", back: "BitLocker", category: "security" },
+            { front: "What is AI’s role in security?", back: "Detects threats using pattern analysis", category: "security" },
+            { front: "What locks data for ransom?", back: "Ransomware", category: "security" },
+            { front: "What encrypts network traffic?", back: "SSL/TLS", category: "security" },
+            { front: "What records keystrokes?", back: "Keylogger", category: "security" },
+            { front: "What tries all password combos?", back: "Brute Force", category: "security" },
+            { front: "What blocks unauthorized access?", back: "Firewall", category: "security" },
+            { front: "What manipulates users for info?", back: "Social Engineering", category: "security" },
+            { front: "What secures remote connections?", back: "VPN", category: "security" },
 
-            // Core 2: Software Troubleshooting
-            { front: "Cause of a BSOD?", back: "Driver conflicts or hardware failure", category: "soft-trouble" },
-            { front: "How to fix slow OS performance?", back: "Run disk cleanup, check for malware", category: "soft-trouble" },
-            { front: "What does 'taskkill' do?", back: "Terminates processes in Windows", category: "soft-trouble" },
-            { front: "What causes app crashes?", back: "Corrupted files, insufficient RAM, or incompatibility", category: "soft-trouble" },
-            { front: "How to remove malware?", back: "Run antivirus or anti-malware tools", category: "soft-trouble" },
-            { front: "What is Safe Mode?", back: "Boots OS with minimal drivers", category: "soft-trouble" },
-            { front: "What does 'DISM' do?", back: "Repairs Windows image (e.g., DISM /Online /Cleanup-Image /RestoreHealth)", category: "soft-trouble" },
-            { front: "How to fix a frozen app?", back: "Use Task Manager to end task", category: "soft-trouble" },
+            // Core 2: Software Troubleshooting (220-1202) - 11 flashcards
+            { front: "What causes a BSOD?", back: "Driver or hardware failure", category: "soft-trouble" },
+            { front: "How to fix a slow PC?", back: "Check disk space, malware, or resource usage", category: "soft-trouble" },
+            { front: "What does 'DISM' repair?", back: "Windows system image", category: "soft-trouble" },
+            { front: "How to stop a frozen app?", back: "Use Task Manager to end task", category: "soft-trouble" },
+            { front: "How to remove malware?", back: "Run antivirus software", category: "soft-trouble" },
+            { front: "What boots with minimal drivers?", back: "Safe Mode", category: "soft-trouble" },
+            { front: "How to fix hardware conflicts?", back: "Update drivers", category: "soft-trouble" },
+            { front: "What to do if an app crashes?", back: "Check logs or reinstall", category: "soft-trouble" },
+            { front: "How to fix low memory issues?", back: "Close apps or add RAM", category: "soft-trouble" },
+            { front: "How to fix a corrupt file?", back: "Replace or repair it", category: "soft-trouble" },
+            { front: "What tool monitors performance?", back: "Performance Monitor", category: "soft-trouble" },
 
-            // Core 2: Operational Procedures
-            { front: "First step in CompTIA troubleshooting?", back: "Identify the problem", category: "ops" },
-            { front: "What is ESD?", back: "Electrostatic Discharge, damages components", category: "ops" },
+            // Core 2: Operational Procedures (220-1202) - 10 flashcards
+            { front: "First step in troubleshooting?", back: "Identify the problem", category: "ops" },
+            { front: "What protects against ESD?", back: "Anti-static wrist strap", category: "ops" },
+            { front: "What is a UPS?", back: "Uninterruptible Power Supply, backup power", category: "ops" },
+            { front: "What is an incremental backup?", back: "Saves only changed files", category: "ops" },
+            { front: "What saves all data?", back: "Full Backup", category: "ops" },
+            { front: "What guards against voltage spikes?", back: "Surge Protector", category: "ops" },
             { front: "What is an RMA?", back: "Return Merchandise Authorization", category: "ops" },
-            { front: "What backup type saves only changed files?", back: "Incremental", category: "ops" },
-            { front: "What is a differential backup?", back: "Backs up files changed since last full backup", category: "ops" },
-            { front: "What is the purpose of a surge protector?", back: "Protects against voltage spikes", category: "ops" },
-            { front: "What is a UPS?", back: "Uninterruptible Power Supply, provides backup power", category: "ops" },
-            { front: "What does PHI stand for?", back: "Protected Health Information", category: "ops" }
+            { front: "What records issues and solutions?", back: "Documentation", category: "ops" },
+            { front: "What grounds static during repairs?", back: "ESD Mat", category: "ops" },
+            { front: "What plans system updates?", back: "Change Management", category: "ops" }
         ];
 
-        // Comprehensive Matching Data with Categories
         const matchingPairs = [
-            // Core 1: Mobile Devices
-            { term: "USB-C", definition: "Modern smartphone charging connector", category: "mobile" },
-            { term: "OLED", definition: "Organic Light-Emitting Diode display", category: "mobile" },
+            // Core 1: Mobile Devices (220-1201) - 12 items
+            { term: "USB-C", definition: "Standard for modern mobile charging", category: "mobile" },
+            { term: "OLED", definition: "Improves display color and efficiency", category: "mobile" },
             { term: "IMAP", definition: "Syncs email across devices", category: "mobile" },
             { term: "NFC", definition: "Enables contactless payments", category: "mobile" },
-            { term: "Digitizer", definition: "Converts touch to digital signals", category: "mobile" },
-            { term: "POP3", definition: "Downloads email, port 110", category: "mobile" },
-            { term: "SMTP", definition: "Sends email, port 25", category: "mobile" },
-            { term: "LTE", definition: "4G mobile standard", category: "mobile" },
-            { term: "Thermal Printer", definition: "Uses heat for receipt printing", category: "mobile" },
-            { term: "Inkjet Printer", definition: "Uses liquid ink through nozzles", category: "mobile" },
-            { term: "Laser Printer", definition: "Uses toner and laser for printing", category: "mobile" },
+            { term: "Digitizer", definition: "Converts touch to digital input", category: "mobile" },
+            { term: "eSIM", definition: "Programmable SIM embedded in devices", category: "mobile" },
+            { term: "Bluetooth", definition: "Short-range wireless for accessories", category: "mobile" },
+            { term: "LTE", definition: "Provides fast mobile data", category: "mobile" },
+            { term: "APN", definition: "Configures mobile network access", category: "mobile" },
+            { term: "Gyroscope", definition: "Detects device orientation", category: "mobile" },
+            { term: "Li-ion Battery", definition: "Common rechargeable power source", category: "mobile" },
+            { term: "MDM", definition: "Manages mobile devices remotely", category: "mobile" },
 
-            // Core 1: Networking
-            { term: "DHCP", definition: "Assigns IP addresses automatically", category: "networking" },
-            { term: "TCP", definition: "Reliable, connection-oriented protocol", category: "networking" },
-            { term: "UDP", definition: "Fast, connectionless protocol", category: "networking" },
-            { term: "DNS", definition: "Resolves domain names to IP (port 53)", category: "networking" },
-            { term: "CAT6", definition: "Supports 10 Gbps over 55 meters", category: "networking" },
-            { term: "RDP", definition: "Remote Desktop Protocol (port 3389)", category: "networking" },
-            { term: "VLAN", definition: "Segments network traffic", category: "networking" },
-            { term: "APIPA", definition: "Automatic Private IP Addressing (169.254.x.x)", category: "networking" },
-            { term: "FTP", definition: "File Transfer Protocol (port 21)", category: "networking" },
-            { term: "SSH", definition: "Secure Shell (port 22)", category: "networking" },
+            // Core 1: Networking (220-1201) - 12 items
+            { term: "HTTPS", definition: "Uses port 443 for secure web", category: "networking" },
+            { term: "DHCP", definition: "Assigns IP addresses dynamically", category: "networking" },
+            { term: "VPN", definition: "Secures remote network access", category: "networking" },
+            { term: "ARP", definition: "Resolves IP to MAC addresses", category: "networking" },
+            { term: "Wi-Fi 6E", definition: "Up to 9.6 Gbps, uses 6 GHz band", category: "networking" },
+            { term: "Zero Trust", definition: "Verifies all devices/users", category: "networking" },
+            { term: "DNS", definition: "Translates domain names to IPs", category: "networking" },
+            { term: "TCP", definition: "Ensures reliable data transfer", category: "networking" },
+            { term: "UDP", definition: "Fast, connectionless data transfer", category: "networking" },
             { term: "NAT", definition: "Maps private IPs to public", category: "networking" },
-            { term: "SNMP", definition: "Simple Network Management Protocol (port 161)", category: "networking" },
-            { term: "Telnet", definition: "Unsecure remote access (port 23)", category: "networking" },
-            { term: "QoS", definition: "Prioritizes network traffic", category: "networking" },
-            { term: "SMB", definition: "File sharing protocol (port 445)", category: "networking" },
-            { term: "LDAP", definition: "Directory access protocol (port 389)", category: "networking" },
-            { term: "Wi-Fi 6", definition: "802.11ax, faster and more efficient", category: "networking" },
+            { term: "CAT8", definition: "Supports 40 Gbps over 30 meters", category: "networking" },
+            { term: "SSID", definition: "Identifies a wireless network", category: "networking" },
 
-            // Core 1: Hardware
-            { term: "SATA", definition: "Connects SSDs and HDDs", category: "hardware" },
+            // Core 1: Hardware (220-1201) - 12 items
+            { term: "PSU", definition: "Converts AC to DC for components", category: "hardware" },
+            { term: "NVMe", definition: "High-speed SSD over PCIe", category: "hardware" },
+            { term: "GPU Connection", definition: "HDMI, DisplayPort, or DVI", category: "hardware" },
+            { term: "TPM", definition: "Secures encryption keys", category: "hardware" },
+            { term: "USB 4", definition: "Supports 40 Gbps data transfer", category: "hardware" },
+            { term: "RAID 10", definition: "Combines striping and mirroring", category: "hardware" },
+            { term: "SATA", definition: "Connects storage drives", category: "hardware" },
             { term: "DIMM", definition: "Desktop RAM module", category: "hardware" },
-            { term: "SO-DIMM", definition: "Laptop RAM module", category: "hardware" },
-            { term: "PSU", definition: "Converts AC to DC power", category: "hardware" },
-            { term: "PCIe", definition: "High-speed expansion slot", category: "hardware" },
             { term: "BIOS", definition: "Initializes hardware at boot", category: "hardware" },
             { term: "M.2", definition: "Compact SSD form factor", category: "hardware" },
-            { term: "RAID 0", definition: "Striping, no redundancy", category: "hardware" },
-            { term: "RAID 1", definition: "Mirroring, full redundancy", category: "hardware" },
-            { term: "RAID 5", definition: "Parity, requires 3+ drives", category: "hardware" },
-            { term: "NVMe", definition: "High-speed SSD over PCIe", category: "hardware" },
-            { term: "TPM", definition: "Hardware security chip", category: "hardware" },
+            { term: "CPU Socket", definition: "Holds processor (e.g., LGA)", category: "hardware" },
+            { term: "Heatsink", definition: "Dissipates CPU heat", category: "hardware" },
 
-            // Core 1: Virtualization and Cloud
+            // Core 1: Virtualization and Cloud (220-1201) - 10 items
             { term: "Hypervisor", definition: "Manages virtual machines", category: "virt-cloud" },
-            { term: "IaaS", definition: "Infrastructure as a Service", category: "virt-cloud" },
-            { term: "PaaS", definition: "Platform as a Service", category: "virt-cloud" },
-            { term: "SaaS", definition: "Software as a Service", category: "virt-cloud" },
-            { term: "VDI", definition: "Virtual Desktop Infrastructure", category: "virt-cloud" },
+            { term: "SaaS", definition: "Delivers software via the cloud", category: "virt-cloud" },
+            { term: "Hybrid Cloud", definition: "Mixes public and private clouds", category: "virt-cloud" },
+            { term: "Client-side Virtualization", definition: "Running VMs on a local device", category: "virt-cloud" },
+            { term: "IaaS", definition: "Provides virtual infrastructure", category: "virt-cloud" },
+            { term: "PaaS", definition: "Platform for app development", category: "virt-cloud" },
+            { term: "VDI", definition: "Virtual desktops hosted remotely", category: "virt-cloud" },
             { term: "Type 1 Hypervisor", definition: "Runs directly on hardware", category: "virt-cloud" },
-            { term: "Public Cloud", definition: "Services over the public internet", category: "virt-cloud" },
-            { term: "Private Cloud", definition: "Dedicated to one organization", category: "virt-cloud" },
-            { term: "Hybrid Cloud", definition: "Combines public and private clouds", category: "virt-cloud" },
+            { term: "Public Cloud", definition: "Shared cloud resources", category: "virt-cloud" },
+            { term: "Private Cloud", definition: "Dedicated cloud for one org", category: "virt-cloud" },
 
-            // Core 1: Troubleshooting
-            { term: "POST", definition: "Power-On Self-Test", category: "troubleshooting" },
-            { term: "Overheating", definition: "Caused by dust or poor cooling", category: "troubleshooting" },
-            { term: "No Display", definition: "Check monitor cable or GPU", category: "troubleshooting" },
-            { term: "Cable Tester", definition: "Tests cable continuity", category: "troubleshooting" },
-            { term: "Intermittent Wi-Fi", definition: "Check interference or drivers", category: "troubleshooting" },
-            { term: "Paper Jam", definition: "Open printer, remove jammed paper", category: "troubleshooting" },
+            // Core 1: Troubleshooting (220-1201) - 10 items
+            { term: "No Boot", definition: "Check power connections", category: "troubleshooting" },
+            { term: "CPU Overheating", definition: "Dust, failed fans, or bad paste", category: "troubleshooting" },
+            { term: "No Wi-Fi", definition: "Check adapter or interference", category: "troubleshooting" },
+            { term: "POST Beep", definition: "Signals hardware failure", category: "troubleshooting" },
+            { term: "No Display", definition: "Check monitor or GPU connection", category: "troubleshooting" },
+            { term: "Slow Drive", definition: "Test for failing HDD/SSD", category: "troubleshooting" },
+            { term: "Printer Jam", definition: "Remove stuck paper", category: "troubleshooting" },
+            { term: "Blue Light", definition: "Check power supply status", category: "troubleshooting" },
+            { term: "Network Drop", definition: "Test cable or signal", category: "troubleshooting" },
+            { term: "Overheating GPU", definition: "Clean fans or reapply paste", category: "troubleshooting" },
 
-            // Core 2: Operating Systems
-            { term: "ipconfig", definition: "Shows IP configuration in Windows", category: "os" },
-            { term: "chmod", definition: "Changes file permissions in Linux", category: "os" },
-            { term: "msconfig", definition: "Manages Windows startup", category: "os" },
-            { term: "regedit", definition: "Edits Windows Registry", category: "os" },
-            { term: "Task Manager", definition: "Monitors running processes", category: "os" },
-            { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
-            { term: "netstat", definition: "Shows network connections", category: "os" },
-            { term: "tracert", definition: "Traces network route", category: "os" },
+            // Core 2: Operating Systems (220-1202) - 10 items
+            { term: "ipconfig", definition: "Shows network info in Windows", category: "os" },
+            { term: "chmod", definition: "Changes Linux file permissions", category: "os" },
+            { term: "sfc /scannow", definition: "Repairs Windows system files", category: "os" },
             { term: "diskpart", definition: "Manages disk partitions", category: "os" },
-            { term: "gpupdate", definition: "Updates Group Policy settings", category: "os" },
-            { term: "sudo", definition: "Runs commands as superuser in Linux", category: "os" },
             { term: "net use", definition: "Maps network drives in Windows", category: "os" },
-            { term: "ps", definition: "Lists running processes in Linux", category: "os" },
+            { term: "msconfig", definition: "Controls startup programs", category: "os" },
+            { term: "regedit", definition: "Edits Windows registry", category: "os" },
+            { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
+            { term: "sudo", definition: "Runs commands as superuser", category: "os" },
+            { term: "tracert", definition: "Traces network route", category: "os" },
 
-            // Core 2: Security
-            { term: "AES", definition: "Symmetric encryption algorithm", category: "security" },
-            { term: "MFA", definition: "Multi-Factor Authentication", category: "security" },
+            // Core 2: Security (220-1202) - 12 items
             { term: "Phishing", definition: "Fraudulent email attack", category: "security" },
-            { term: "Ransomware", definition: "Encrypts data for ransom", category: "security" },
-            { term: "BitLocker", definition: "Encrypts Windows drives", category: "security" },
+            { term: "MFA", definition: "Adds extra security verification", category: "security" },
             { term: "DDoS", definition: "Overwhelms a server", category: "security" },
-            { term: "Rootkit", definition: "Hides deep in the OS", category: "security" },
-            { term: "SSL/TLS", definition: "Encrypts network data", category: "security" },
-            { term: "Keylogger", definition: "Records keystrokes to steal data", category: "security" },
-            { term: "Tailgating", definition: "Unauthorized entry by following", category: "security" },
-            { term: "Strong Password", definition: "Long, complex, with mixed characters", category: "security" },
-            { term: "Pretexting", definition: "Social engineering with a false scenario", category: "security" },
+            { term: "BitLocker", definition: "Encrypts Windows drives", category: "security" },
+            { term: "AI Security", definition: "Uses patterns to detect threats", category: "security" },
+            { term: "Ransomware", definition: "Locks data for ransom", category: "security" },
+            { term: "SSL/TLS", definition: "Encrypts network traffic", category: "security" },
+            { term: "Keylogger", definition: "Records keystrokes", category: "security" },
+            { term: "Brute Force", definition: "Tries all password combos", category: "security" },
+            { term: "Firewall", definition: "Blocks unauthorized access", category: "security" },
+            { term: "Social Engineering", definition: "Manipulates users for info", category: "security" },
+            { term: "VPN Security", definition: "Secures remote connections", category: "security" },
 
-            // Core 2: Software Troubleshooting
-            { term: "BSOD", definition: "Blue Screen of Death", category: "soft-trouble" },
-            { term: "sfc /scannow", definition: "Repairs system files", category: "soft-trouble" },
-            { term: "Taskkill", definition: "Terminates processes in Windows", category: "soft-trouble" },
+            // Core 2: Software Troubleshooting (220-1202) - 10 items
+            { term: "BSOD", definition: "Caused by driver or hardware issues", category: "soft-trouble" },
+            { term: "Slow PC", definition: "Check disk space or malware", category: "soft-trouble" },
+            { term: "DISM", definition: "Repairs Windows system image", category: "soft-trouble" },
+            { term: "Frozen App", definition: "Use Task Manager to end task", category: "soft-trouble" },
+            { term: "Malware", definition: "Run antivirus to remove", category: "soft-trouble" },
             { term: "Safe Mode", definition: "Boots with minimal drivers", category: "soft-trouble" },
-            { term: "DISM", definition: "Repairs Windows image", category: "soft-trouble" },
+            { term: "Driver Update", definition: "Fixes hardware conflicts", category: "soft-trouble" },
+            { term: "App Crash", definition: "Check logs or reinstall", category: "soft-trouble" },
+            { term: "Low Memory", definition: "Close apps or add RAM", category: "soft-trouble" },
+            { term: "Corrupt File", definition: "Replace or repair file", category: "soft-trouble" },
 
-            // Core 2: Operational Procedures
-            { term: "ESD", definition: "Electrostatic Discharge", category: "ops" },
-            { term: "RMA", definition: "Return Merchandise Authorization", category: "ops" },
-            { term: "Incremental", definition: "Backup of changed files only", category: "ops" },
-            { term: "Differential", definition: "Backs up changes since last full", category: "ops" },
-            { term: "UPS", definition: "Provides backup power", category: "ops" }
+            // Core 2: Operational Procedures (220-1202) - 10 items
+            { term: "Troubleshooting Step 1", definition: "Identify the problem", category: "ops" },
+            { term: "ESD Protection", definition: "Anti-static wrist strap", category: "ops" },
+            { term: "UPS", definition: "Provides backup power", category: "ops" },
+            { term: "Incremental Backup", definition: "Saves only changed files", category: "ops" },
+            { term: "Full Backup", definition: "Saves all data", category: "ops" },
+            { term: "Surge Protector", definition: "Guards against voltage spikes", category: "ops" },
+            { term: "RMA", definition: "Process for returning faulty items", category: "ops" },
+            { term: "Documentation", definition: "Records issue and solution", category: "ops" },
+            { term: "ESD Mat", definition: "Grounds static during repairs", category: "ops" },
+            { term: "Change Management", definition: "Plans system updates", category: "ops" }
         ];
 
-        // Explanations for Correct Matches (No Acronyms in Explanations)
         const explanations = {
-            // Mobile Devices
-            "USB-C": "The Universal Serial Bus Type-C connector is the standard for charging modern smartphones because it’s small, reversible, and supports fast charging and data transfer.",
-            "OLED": "An Organic Light-Emitting Diode display uses organic compounds to emit light, making it ideal for mobile devices due to its thinness, energy efficiency, and vibrant colors.",
-            "IMAP": "The Internet Message Access Protocol keeps email synchronized across multiple devices by storing messages on a server, allowing you to access the same emails from your phone, tablet, or computer.",
-            "NFC": "Near Field Communication enables contactless payments by allowing devices to exchange data wirelessly over a short distance, like when you tap your phone to pay at a store.",
-            "Digitizer": "A digitizer converts your touch on a screen into digital signals that the device understands, enabling features like tapping and swiping on a touchscreen.",
-            "POP3": "The Post Office Protocol version 3 downloads emails from a server to your device using port 110, making it useful for offline access but not for syncing across devices.",
-            "SMTP": "The Simple Mail Transfer Protocol sends emails from your device to a server using port 25, acting as the delivery system for outgoing messages.",
-            "LTE": "Long-Term Evolution is a fourth-generation mobile standard that provides fast internet speeds on cellular networks, improving video streaming and web browsing on phones.",
-            "Thermal Printer": "A thermal printer uses heat to print on special paper, commonly used for receipts because it’s fast, quiet, and doesn’t need ink.",
-            "Inkjet Printer": "An inkjet printer sprays liquid ink through tiny nozzles onto paper, offering affordable color printing for photos and documents.",
-            "Laser Printer": "A laser printer uses toner powder and a laser to create high-quality text and images, making it efficient for large print jobs.",
+            // Core 1: Mobile Devices
+            "USB-C": "The Universal Serial Bus Type-C connector is widely used for charging modern mobile devices because it’s small, reversible, and supports fast data transfer and power delivery.",
+            "OLED": "Organic Light-Emitting Diode displays use organic materials to emit light, offering better color accuracy and energy efficiency for mobile screens.",
+            "IMAP": "Internet Message Access Protocol keeps emails synchronized across multiple devices by storing them on a server, ideal for mobile use.",
+            "NFC": "Near Field Communication allows devices to exchange data wirelessly over short distances, commonly used for quick payments with a phone tap.",
+            "Digitizer": "A digitizer converts physical touch on a screen into digital signals, enabling touch functionality on mobile devices.",
+            "eSIM": "An embedded SIM is built into a device and can be programmed remotely, replacing physical SIM cards for easier carrier switching.",
+            "Bluetooth": "Bluetooth enables short-range wireless connections for accessories like headphones or keyboards on mobile devices.",
+            "LTE": "Long-Term Evolution provides fast mobile data speeds, improving browsing and streaming on cellular networks.",
+            "APN": "Access Point Name configures a mobile device’s connection to a carrier’s network for data access.",
+            "Gyroscope": "A gyroscope detects a device’s orientation, enabling features like screen rotation or motion gaming.",
+            "Li-ion Battery": "Lithium-ion batteries are rechargeable and power most mobile devices due to their high energy density.",
+            "MDM": "Mobile Device Management allows remote control and security enforcement on mobile devices in an organization.",
 
-            // Networking
-            "DHCP": "The Dynamic Host Configuration Protocol automatically assigns Internet Protocol addresses to devices on a network, simplifying setup by providing unique identifiers without manual input.",
-            "TCP": "The Transmission Control Protocol ensures reliable data delivery by establishing a connection between devices, checking for errors, and retransmitting if needed.",
-            "UDP": "The User Datagram Protocol sends data quickly without establishing a connection, prioritizing speed over reliability, useful for streaming or gaming.",
-            "DNS": "The Domain Name System translates website names into Internet Protocol addresses using port 53, allowing you to visit sites by name instead of numbers.",
-            "CAT6": "Category 6 cable supports data transfer speeds up to 10 gigabits per second over 55 meters, making it a high-performance option for modern networks.",
-            "RDP": "The Remote Desktop Protocol allows you to control a computer remotely using port 3389, providing access to its desktop over a network.",
-            "VLAN": "A Virtual Local Area Network segments network traffic into separate groups, improving security and organization without needing extra hardware.",
-            "APIPA": "Automatic Private Internet Protocol Addressing assigns a special address starting with 169.254 when a network device can’t get one from a server, keeping it functional locally.",
-            "FTP": "The File Transfer Protocol moves files between devices over a network using port 21, commonly used for uploading or downloading data.",
-            "SSH": "Secure Shell provides a safe way to access and manage devices remotely using port 22, encrypting data to protect it from interception.",
-            "NAT": "Network Address Translation converts private Internet Protocol addresses to a public one, allowing multiple devices to share a single internet connection.",
-            "SNMP": "The Simple Network Management Protocol monitors and manages network devices using port 161, collecting performance data like bandwidth usage.",
-            "Telnet": "Telnet offers remote access to devices over a network using port 23, but it’s unsecure because it doesn’t encrypt data.",
-            "QoS": "Quality of Service prioritizes certain types of network traffic, ensuring important data like video calls get through smoothly even during congestion.",
-            "SMB": "The Server Message Block protocol shares files and printers over a network using port 445, common in Windows environments.",
-            "LDAP": "The Lightweight Directory Access Protocol accesses and manages directory information over a network using port 389, often for user authentication.",
-            "Wi-Fi 6": "The 802.11ax standard improves wireless networking with faster speeds and better efficiency, handling more devices at once compared to older versions.",
+            // Core 1: Networking
+            "HTTPS": "HyperText Transfer Protocol Secure uses port 443 to encrypt web traffic, ensuring safe browsing.",
+            "DHCP": "Dynamic Host Configuration Protocol assigns unique network addresses to devices automatically, simplifying network setup.",
+            "VPN": "A Virtual Private Network creates a secure connection over the internet, protecting data when accessing networks remotely.",
+            "ARP": "Address Resolution Protocol maps Internet Protocol addresses to physical MAC addresses on a network.",
+            "Wi-Fi 6E": "Wi-Fi 6 Extended uses the 6 GHz band for faster wireless speeds and less interference, ideal for modern networks.",
+            "Zero Trust": "Zero Trust security assumes no device or user is trusted by default, requiring constant verification to prevent breaches.",
+            "DNS": "Domain Name System translates human-readable website names into numeric IP addresses for network access.",
+            "TCP": "Transmission Control Protocol ensures reliable data delivery by checking for errors and retransmitting if needed.",
+            "UDP": "User Datagram Protocol sends data quickly without error checking, ideal for streaming or gaming.",
+            "NAT": "Network Address Translation maps private IP addresses to a public one, allowing multiple devices to share an internet connection.",
+            "CAT8": "Category 8 cable supports data speeds up to 40 gigabits per second over short distances, used in high-performance networks.",
+            "SSID": "Service Set Identifier is the name of a wireless network, helping users identify and connect to it.",
 
-            // Hardware
-            "SATA": "Serial Advanced Technology Attachment connects storage drives like solid-state drives and hard disk drives to a computer’s motherboard, providing fast data transfer.",
-            "DIMM": "A Dual In-line Memory Module is a type of random access memory used in desktop computers, offering high-speed storage for running programs.",
-            "SO-DIMM": "A Small Outline Dual In-line Memory Module is a compact random access memory type designed for laptops, fitting their smaller size.",
-            "PSU": "The Power Supply Unit converts alternating current from the wall into direct current to power computer components, ensuring they operate correctly.",
-            "PCIe": "Peripheral Component Interconnect Express is a high-speed slot that connects expansion cards like graphics or sound cards to the motherboard.",
-            "BIOS": "The Basic Input/Output System starts a computer by initializing its hardware, providing the foundation for the operating system to load.",
-            "M.2": "The M.2 form factor is a compact design for solid-state drives, offering fast storage in a small size for modern computers.",
-            "RAID 0": "Redundant Array of Independent Disks level 0 splits data across multiple drives for faster access, but offers no backup if a drive fails.",
-            "RAID 1": "Redundant Array of Independent Disks level 1 duplicates data across drives, ensuring redundancy so data isn’t lost if one drive fails.",
-            "RAID 5": "Redundant Array of Independent Disks level 5 uses three or more drives with parity information, balancing speed and data protection.",
-            "NVMe": "Non-Volatile Memory Express is a high-speed interface for solid-state drives using Peripheral Component Interconnect Express, offering faster data access than older methods.",
-            "TPM": "The Trusted Platform Module is a chip that enhances security by storing encryption keys and verifying system integrity.",
+            // Core 1: Hardware
+            "PSU": "The Power Supply Unit converts alternating current from the wall into direct current to power computer components.",
+            "NVMe": "Non-Volatile Memory Express boosts solid-state drive speeds by using the Peripheral Component Interconnect Express interface.",
+            "GPU Connection": "Graphics Processing Units connect to monitors using cables like High-Definition Multimedia Interface, DisplayPort, or Digital Visual Interface.",
+            "TPM": "The Trusted Platform Module is a chip that stores encryption keys and verifies system integrity for enhanced security.",
+            "USB 4": "Universal Serial Bus version 4 offers data transfer speeds up to 40 gigabits per second, doubling USB 3’s capability.",
+            "RAID 10": "Redundant Array of Independent Disks level 10 combines data striping for speed and mirroring for redundancy.",
+            "SATA": "Serial Advanced Technology Attachment connects storage drives like hard disks or SSDs to the motherboard.",
+            "DIMM": "Dual In-line Memory Module is a type of RAM used in desktops for high-speed program execution.",
+            "BIOS": "Basic Input/Output System initializes hardware during a computer’s boot process, loading the operating system.",
+            "M.2": "M.2 is a compact form factor for solid-state drives, offering fast storage in small devices.",
+            "CPU Socket": "A CPU socket, like Land Grid Array, physically holds and connects the processor to the motherboard.",
+            "Heatsink": "A heatsink dissipates heat from the CPU, preventing overheating during operation.",
 
-            // Virtualization and Cloud
-            "Hypervisor": "A hypervisor manages virtual machines by running them as separate systems on a single physical computer, optimizing resource use.",
-            "IaaS": "Infrastructure as a Service provides virtual computing resources like servers and storage over the internet, reducing the need for physical hardware.",
-            "PaaS": "Platform as a Service offers a development environment over the internet, simplifying software creation without managing underlying systems.",
-            "SaaS": "Software as a Service delivers applications over the internet, allowing users to access tools like email or documents without installing them locally.",
-            "VDI": "Virtual Desktop Infrastructure creates virtual desktops hosted on a server, letting users access a full desktop environment remotely.",
-            "Type 1 Hypervisor": "A Type 1 hypervisor runs directly on computer hardware, efficiently managing virtual machines without an underlying operating system.",
-            "Public Cloud": "Public cloud services are offered over the internet to anyone, providing scalable resources like storage or computing power.",
-            "Private Cloud": "A private cloud is dedicated to one organization, offering secure, exclusive access to computing resources.",
-            "Hybrid Cloud": "A hybrid cloud combines public and private cloud resources, allowing flexibility between shared and dedicated systems.",
+            // Core 1: Virtualization and Cloud
+            "Hypervisor": "A hypervisor runs virtual machines by managing resources on a single physical computer, enabling multiple operating systems.",
+            "SaaS": "Software as a Service provides applications over the internet, like email or document editors, without local installation.",
+            "Hybrid Cloud": "A hybrid cloud blends public internet-based services with private dedicated resources for flexibility and security.",
+            "Client-side Virtualization": "Running virtual machines locally on a device allows isolated testing or multi-OS use.",
+            "IaaS": "Infrastructure as a Service offers virtual servers and storage over the cloud, reducing the need for physical hardware.",
+            "PaaS": "Platform as a Service provides a cloud environment for developing and deploying applications.",
+            "VDI": "Virtual Desktop Infrastructure hosts desktops on a server, allowing remote access to a full desktop experience.",
+            "Type 1 Hypervisor": "A Type 1 hypervisor runs directly on hardware, offering efficient virtual machine management.",
+            "Public Cloud": "Public cloud services provide shared resources over the internet, accessible to multiple users.",
+            "Private Cloud": "A private cloud is dedicated to one organization, offering secure and exclusive resource access.",
 
-            // Troubleshooting
-            "POST": "The Power-On Self-Test checks a computer’s hardware when it starts, ensuring components like memory and storage are working.",
-            "Overheating": "Overheating happens when dust blocks airflow or cooling fails, causing components to get too hot and potentially fail.",
-            "No Display": "No display on a monitor often means the cable or graphics processing unit isn’t connected properly, requiring a check.",
-            "Cable Tester": "A cable tester checks if a network cable’s wires are continuous, ensuring it can carry data without breaks.",
-            "Intermittent Wi-Fi": "Intermittent wireless internet can result from signal interference or outdated drivers, needing troubleshooting to stabilize.",
-            "Paper Jam": "A paper jam occurs when paper gets stuck in a printer, fixed by opening it and carefully removing the obstruction.",
+            // Core 1: Troubleshooting
+            "No Boot": "If a computer won’t start, checking power connections ensures electricity is reaching the system.",
+            "CPU Overheating": "Overheating occurs when dust blocks airflow or cooling systems fail, risking damage to the processor.",
+            "No Wi-Fi": "No wireless signal might mean a disabled adapter, weak signal, or interference from other devices.",
+            "POST Beep": "A Power-On Self-Test beep alerts you to hardware issues, like faulty memory or graphics, during startup.",
+            "No Display": "A blank screen may indicate a loose monitor cable or graphics card issue needing inspection.",
+            "Slow Drive": "A failing hard drive or SSD can slow performance, requiring diagnostic testing.",
+            "Printer Jam": "Paper stuck in a printer requires opening it and carefully removing the obstruction.",
+            "Blue Light": "A blue power light might indicate a power supply issue, needing further checks.",
+            "Network Drop": "Intermittent network loss could stem from a faulty cable or weak wireless signal.",
+            "Overheating GPU": "A hot graphics card may need fan cleaning or new thermal paste to cool down.",
 
-            // Operating Systems
-            "ipconfig": "The ipconfig command in Windows displays the current Internet Protocol configuration, showing details like your device’s address.",
-            "chmod": "The chmod command in Linux changes file permissions, controlling who can read, write, or execute a file.",
-            "msconfig": "The msconfig tool in Windows manages which programs start automatically, helping optimize boot time.",
-            "regedit": "The regedit tool edits the Windows Registry, a database that stores operating system and application settings.",
-            "Task Manager": "Task Manager monitors running processes on a computer, letting you see and stop active programs or services.",
-            "chkdsk": "The chkdsk command checks a disk for errors and fixes them, ensuring data storage remains reliable.",
-            "netstat": "The netstat command shows active network connections and ports, helping diagnose network activity.",
-            "tracert": "The tracert command traces the path data takes to a network destination, identifying where delays occur.",
-            "diskpart": "The diskpart tool manages disk partitions in Windows, allowing you to create, delete, or format storage sections.",
-            "gpupdate": "The gpupdate command refreshes Group Policy settings in Windows, applying new rules in a network environment.",
-            "sudo": "The sudo command in Linux lets a user run commands with superuser privileges, granting high-level access when needed.",
-            "net use": "The net use command in Windows connects to network drives, linking shared storage to your computer.",
-            "ps": "The ps command in Linux lists running processes, showing what programs or tasks are active.",
+            // Core 2: Operating Systems
+            "ipconfig": "The ipconfig command in Windows displays network settings, helping you troubleshoot connectivity issues.",
+            "chmod": "The chmod command in Linux adjusts who can read, write, or run a file, controlling access.",
+            "sfc /scannow": "System File Checker scans and fixes corrupted Windows files to restore system stability.",
+            "diskpart": "Diskpart manages disk partitions in Windows, allowing creation, deletion, or formatting of storage sections.",
+            "net use": "The net use command connects to network drives, linking shared storage to your computer.",
+            "msconfig": "The msconfig tool controls which programs start with Windows, optimizing boot time.",
+            "regedit": "Regedit edits the Windows Registry, a database of system and app settings.",
+            "chkdsk": "Check Disk scans and repairs disk errors to maintain storage reliability.",
+            "sudo": "The sudo command in Linux runs tasks with superuser privileges for administrative control.",
+            "tracert": "Traceroute traces the path data takes to a network destination, identifying delays.",
 
-            // Security
-            "AES": "The Advanced Encryption Standard is a symmetric encryption method that scrambles data with a single key, widely used for its strength.",
-            "MFA": "Multi-Factor Authentication requires multiple verification steps, like a password and a code, to enhance security.",
-            "Phishing": "Phishing uses fake emails to trick people into sharing sensitive information, posing as legitimate sources.",
-            "Ransomware": "Ransomware locks data by encrypting it and demands payment to unlock it, acting as a digital hostage situation.",
-            "BitLocker": "BitLocker encrypts entire Windows drives, protecting data from unauthorized access if a device is lost or stolen.",
-            "DDoS": "A Distributed Denial of Service attack floods a server with traffic from many sources, making it unavailable to users.",
-            "Rootkit": "A rootkit is malicious software that hides deep within an operating system, making it hard to detect and remove.",
-            "SSL/TLS": "Secure Sockets Layer and Transport Layer Security encrypt data sent over networks, keeping communications private.",
-            "Keylogger": "A keylogger records every keystroke you type, aiming to steal passwords or other sensitive information.",
-            "Tailgating": "Tailgating is when someone sneaks into a secure area by following an authorized person, bypassing entry controls.",
-            "Strong Password": "A strong password is long and complex, mixing letters, numbers, and symbols to make it hard to guess.",
-            "Pretexting": "Pretexting tricks people into giving information by creating a fake scenario, like pretending to be a coworker.",
+            // Core 2: Security
+            "Phishing": "Phishing tricks users into giving away sensitive information through fake emails pretending to be legitimate.",
+            "MFA": "Multi-Factor Authentication requires multiple proofs of identity, like a password and a phone code, for better protection.",
+            "DDoS": "A Distributed Denial of Service attack floods a server with traffic to make it unavailable to users.",
+            "BitLocker": "BitLocker encrypts entire Windows drives, protecting data from unauthorized access if a device is lost.",
+            "AI Security": "Artificial Intelligence in security analyzes patterns to spot and stop threats faster than manual methods.",
+            "Ransomware": "Ransomware encrypts data and demands payment to unlock it, acting as a digital hostage situation.",
+            "SSL/TLS": "Secure Sockets Layer and Transport Layer Security encrypt data over networks, ensuring privacy.",
+            "Keylogger": "A keylogger records every keystroke typed, aiming to steal passwords or sensitive data.",
+            "Brute Force": "A brute force attack tries every possible password combination to gain access.",
+            "Firewall": "A firewall blocks unauthorized network access, protecting systems from external threats.",
+            "Social Engineering": "Social engineering manipulates users into revealing confidential information through deception.",
+            "VPN Security": "A Virtual Private Network secures remote connections by encrypting data over the internet.",
 
-            // Software Troubleshooting
-            "BSOD": "The Blue Screen of Death appears when a Windows system crashes due to serious errors like driver issues.",
-            "sfc /scannow": "The sfc /scannow command scans and repairs critical system files in Windows, fixing corruption.",
-            "Taskkill": "The taskkill command stops running processes in Windows, useful for closing unresponsive programs.",
-            "Safe Mode": "Safe Mode starts an operating system with only essential drivers, helping troubleshoot issues.",
-            "DISM": "Deployment Image Servicing and Management repairs a Windows system image, restoring damaged components.",
+            // Core 2: Software Troubleshooting
+            "BSOD": "A Blue Screen of Death signals a critical Windows error, often from incompatible drivers or hardware faults.",
+            "Slow PC": "A slow computer might be due to limited disk space, malware, or high resource usage, needing investigation.",
+            "DISM": "Deployment Image Servicing and Management fixes the Windows system image when standard repairs fail.",
+            "Frozen App": "A frozen application can be stopped using Task Manager to forcefully end its process.",
+            "Malware": "Malware requires antivirus software to detect and remove harmful programs from a system.",
+            "Safe Mode": "Safe Mode boots an operating system with minimal drivers to troubleshoot issues.",
+            "Driver Update": "Updating drivers resolves hardware conflicts or improves performance.",
+            "App Crash": "An application crash might need log checks or reinstallation to fix corrupted files.",
+            "Low Memory": "Low memory issues can be fixed by closing apps or adding more RAM to the system.",
+            "Corrupt File": "A corrupt file may need replacement or repair to restore functionality.",
 
-            // Operational Procedures
-            "ESD": "Electrostatic Discharge can damage computer parts with static electricity, requiring careful handling.",
-            "RMA": "Return Merchandise Authorization is a process to return faulty products for repair or replacement.",
-            "Incremental": "An incremental backup saves only files changed since the last backup, speeding up the process.",
-            "Differential": "A differential backup saves all changes since the last full backup, offering a balance of speed and coverage.",
-            "UPS": "An Uninterruptible Power Supply provides temporary power during outages, protecting against data loss."
+            // Core 2: Operational Procedures
+            "Troubleshooting Step 1": "Identifying the problem is the first step in solving any technical issue systematically.",
+            "ESD Protection": "An anti-static wrist strap prevents electrostatic discharge from damaging sensitive electronics.",
+            "UPS": "An Uninterruptible Power Supply keeps devices running during outages, preventing data loss.",
+            "Incremental Backup": "An incremental backup saves only files changed since the last backup, making it faster than full backups.",
+            "Full Backup": "A full backup saves all data, providing a complete restore point.",
+            "Surge Protector": "A surge protector shields equipment from sudden voltage spikes that could cause damage.",
+            "RMA": "Return Merchandise Authorization is the process for returning defective products for repair or replacement.",
+            "Documentation": "Documenting an issue and its solution ensures a record for future reference.",
+            "ESD Mat": "An ESD mat grounds static electricity during repairs, protecting components.",
+            "Change Management": "Change management plans system updates to minimize disruptions and ensure stability."
         };
 
         let currentFlashcard = 0;
@@ -739,18 +834,17 @@
         let completedSections = new Set();
         const categoryOrder = ["mobile", "networking", "hardware", "virt-cloud", "troubleshooting", "os", "security", "soft-trouble", "ops"];
         const categoryNames = {
-            "mobile": "Mobile Devices",
-            "networking": "Networking",
-            "hardware": "Hardware",
-            "virt-cloud": "Virtualization & Cloud",
-            "troubleshooting": "Troubleshooting",
-            "os": "Operating Systems",
-            "security": "Security",
-            "soft-trouble": "Software Troubleshooting",
-            "ops": "Operational Procedures"
+            "mobile": "Mobile Devices (Core 1)",
+            "networking": "Networking (Core 1)",
+            "hardware": "Hardware (Core 1)",
+            "virt-cloud": "Virtualization & Cloud (Core 1)",
+            "troubleshooting": "Troubleshooting (Core 1)",
+            "os": "Operating Systems (Core 2)",
+            "security": "Security (Core 2)",
+            "soft-trouble": "Software Troubleshooting (Core 2)",
+            "ops": "Operational Procedures (Core 2)"
         };
 
-        // Mode Toggle
         const flashcardBtn = document.getElementById("flashcard-btn");
         const matchingBtn = document.getElementById("matching-btn");
 
@@ -761,8 +855,8 @@
             inactiveBtn.classList.remove("active");
         }
 
-        // Flashcard Functions
         function showFlashcards() {
+            console.log("Showing flashcards");
             document.getElementById("flashcard-container").style.display = "block";
             document.getElementById("matching-container").style.display = "none";
             setActiveMode(flashcardBtn, matchingBtn);
@@ -770,6 +864,7 @@
         }
 
         function loadFlashcard() {
+            console.log("Loading flashcard", currentFlashcard);
             const card = document.getElementById("flashcard");
             const front = document.querySelector(".flashcard-front");
             const back = document.querySelector(".flashcard-back");
@@ -783,13 +878,12 @@
             loadFlashcard();
         }
 
-        // Add flashcard flip listener once
         document.getElementById("flashcard").addEventListener("click", function() {
             this.classList.toggle("flipped");
         });
 
-        // Matching Functions
         function showMatching() {
+            console.log("Showing matching");
             document.getElementById("flashcard-container").style.display = "none";
             document.getElementById("matching-container").style.display = "flex";
             setActiveMode(matchingBtn, flashcardBtn);
@@ -855,6 +949,7 @@
 
         function setupMatchingSection() {
             try {
+                console.log("Setting up section:", categoryOrder[currentSection]);
                 const termsDiv = document.getElementById("matching-terms");
                 const defsDiv = document.getElementById("matching-definitions");
                 const matchesLeftDiv = document.getElementById("matches-left");
@@ -948,9 +1043,11 @@
             if (item.classList.contains("correct")) return;
             selectedTerm = item;
             selectedTerm.classList.add("selected");
+            console.log("Selected term:", item.textContent);
         }
 
         function showModal(term, definition) {
+            console.log("Showing modal for:", term);
             const modal = document.getElementById("explanation-modal");
             const modalTitle = document.getElementById("modal-title");
             const modalDefinition = document.getElementById("modal-definition");
@@ -958,7 +1055,7 @@
 
             modalTitle.textContent = `Correct Match: ${term}`;
             modalDefinition.textContent = `Definition: ${definition}`;
-            modalExplanation.textContent = explanations[term] || "This term matches its definition because it describes a key concept in the CompTIA A+ curriculum.";
+            modalExplanation.textContent = explanations[term] || "This term is key to the new CompTIA A+ exams.";
             modal.style.display = "block";
             document.querySelector(".modal-overlay").style.display = "block";
         }
@@ -976,7 +1073,7 @@
                         currentSection = (currentSection + 1) % categoryOrder.length;
                     }
                     setupMatchingSection();
-                }, 500); // Delay for animations
+                }, 500);
             }
         }
 
@@ -984,6 +1081,7 @@
             if (!selectedTerm || defItem.classList.contains("correct")) return;
             const term = selectedTerm.textContent;
             const def = defItem.textContent;
+            console.log("Matching attempt:", term, "with", def);
             const pair = matchingPairs.find(p => p.term === term && p.definition === def);
             const matchesLeftDiv = document.getElementById("matches-left");
             const scoreDiv = document.getElementById("score");
@@ -1024,7 +1122,6 @@
             setupMatchingSection();
         }
 
-        // Initialize with Flashcard Mode
         showFlashcards();
     </script>
 </body>
