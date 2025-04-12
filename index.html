@@ -383,7 +383,6 @@
         .hidden {
             display: none !important;
         }
-        /* Mobile-specific adjustments */
         @media screen and (max-width: 600px) {
             body {
                 padding: 10px;
@@ -514,17 +513,30 @@
     </div>
 
     <script>
+        let isSubmitting = false;
+
         function verifyAccess() {
-            const code = document.getElementById("access-code").value;
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const code = document.getElementById("access-code").value.trim();
             const correctCode = "A+IsMyBitch69!";
             const errorMessage = document.getElementById("error-message");
+
+            console.log("Entered code:", code); // Debugging log
+
             if (code === correctCode) {
+                console.log("Access granted!");
                 document.getElementById("access-prompt").style.display = "none";
                 document.getElementById("game-content").classList.remove("hidden");
             } else {
+                console.log("Access denied. Incorrect code.");
                 errorMessage.style.display = "block";
                 document.getElementById("access-code").value = "";
-                setTimeout(() => errorMessage.style.display = "none", 2000);
+                setTimeout(() => {
+                    errorMessage.style.display = "none";
+                    isSubmitting = false;
+                }, 2000);
             }
         }
 
@@ -954,7 +966,7 @@
         function showMatching() {
             console.log("Showing matching");
             document.getElementById("flashcard-container").style.display = "none";
-            document.getElementById("matching-container").style.display = "flex W;
+            document.getElementById("matching-container").style.display = "flex";
             setActiveMode(matchingBtn, flashcardBtn);
             currentSection = 0;
             completedSections.clear();
