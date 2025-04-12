@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CompTIA A+ Annihilator Game (New A+ Updated)</title>
     <style>
         body {
@@ -10,9 +10,10 @@
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #fff;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             min-height: 100vh;
             transition: background 0.5s;
+            overflow-x: hidden;
         }
         .container {
             max-width: 1000px;
@@ -319,39 +320,41 @@
             align-items: center;
             justify-content: center;
             z-index: 1001;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
         #access-prompt div {
             background: linear-gradient(135deg, #ffffff, #e0f7fa);
-            padding: 20px;
-            border-radius: 15px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.7);
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
             animation: pulse 2s infinite;
             box-sizing: border-box;
+            margin: 10px;
         }
         #access-prompt h2 {
             color: #1e3c72;
-            font-size: 1.5em;
-            line-height: 1.2;
-            margin: 0 0 15px;
+            font-size: 1.2em;
+            line-height: 1.3;
+            margin: 0 0 10px;
             animation: glow 3s infinite;
             overflow-wrap: break-word;
-            word-wrap: break-word;
             word-break: break-word;
             hyphens: auto;
         }
         #access-prompt input {
-            padding: 10px;
-            margin: 10px 0;
-            width: 90%;
-            max-width: 300px;
+            padding: 8px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 280px;
             border: 2px solid #007bff;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
+            border-radius: 6px;
+            font-size: 0.9em;
             box-sizing: border-box;
+            transition: border-color 0.3s;
         }
         #access-prompt input:focus {
             border-color: #00ff00;
@@ -361,10 +364,10 @@
             background: #ff4500;
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 8px;
+            padding: 8px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             transition: background 0.3s, transform 0.2s;
         }
@@ -375,41 +378,45 @@
         #access-prompt p {
             color: #d32f2f;
             font-weight: bold;
-            margin: 10px 0 0;
+            margin: 8px 0 0;
             display: none;
             animation: shake 0.3s;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
         .hidden {
             display: none !important;
         }
         @media screen and (max-width: 600px) {
             body {
+                padding: 0;
+            }
+            #access-prompt {
                 padding: 10px;
+                align-items: flex-start;
             }
             #access-prompt div {
-                padding: 15px;
-                width: 90%;
-                max-width: 350px;
+                padding: 12px;
+                max-width: 300px;
+                margin: 5px;
             }
             #access-prompt h2 {
-                font-size: 1.2em;
-                margin-bottom: 12px;
+                font-size: 1.1em;
+                margin-bottom: 8px;
             }
             #access-prompt input {
-                padding: 8px;
-                font-size: 0.9em;
-                width: 85%;
+                padding: 7px;
+                font-size: 0.85em;
+                max-width: 260px;
             }
             #access-prompt button {
-                padding: 8px 20px;
-                font-size: 1em;
+                padding: 7px 15px;
+                font-size: 0.9em;
             }
             #access-prompt p {
-                font-size: 0.8em;
+                font-size: 0.75em;
             }
             .container {
-                padding: 15px;
+                padding: 10px;
             }
             h1 {
                 font-size: 2em;
@@ -433,14 +440,35 @@
             }
         }
         @media screen and (max-width: 400px) {
+            #access-prompt {
+                padding: 5px;
+            }
+            #access-prompt div {
+                padding: 10px;
+                max-width: 280px;
+            }
             #access-prompt h2 {
                 font-size: 1em;
             }
-            #access-prompt div {
-                padding: 12px;
-            }
             #access-prompt input {
-                width: 80%;
+                max-width: 240px;
+                font-size: 0.8em;
+            }
+            #access-prompt button {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+            #access-prompt p {
+                font-size: 0.7em;
+            }
+        }
+        @media screen and (max-height: 600px) {
+            #access-prompt {
+                align-items: flex-start;
+                padding-top: 10px;
+            }
+            #access-prompt div {
+                margin-top: 10px;
             }
         }
     </style>
@@ -449,7 +477,7 @@
     <div id="access-prompt">
         <div>
             <h2>Stick It In: Enter Your A+ Access Code From Gumroad:</h2>
-            <input type="password" id="access-code" placeholder="Drop that code, champ!">
+            <input type="text" id="access-code" placeholder="Drop that code, champ!">
             <button onclick="verifyAccess()">Unlock the A+ Annihilator!</button>
             <p id="error-message">Wrong code, try again!</p>
         </div>
@@ -523,12 +551,13 @@
             const correctCode = "A+IsMyBitch69!";
             const errorMessage = document.getElementById("error-message");
 
-            console.log("Entered code:", code); // Debugging log
+            console.log("Entered code:", code);
 
             if (code === correctCode) {
                 console.log("Access granted!");
                 document.getElementById("access-prompt").style.display = "none";
                 document.getElementById("game-content").classList.remove("hidden");
+                isSubmitting = false;
             } else {
                 console.log("Access denied. Incorrect code.");
                 errorMessage.style.display = "block";
@@ -540,7 +569,6 @@
             }
         }
 
-        // Allow Enter key to submit access code
         document.getElementById("access-code").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 verifyAccess();
@@ -550,7 +578,6 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         const flashcards = [
-            // Core 1: Mobile Devices (220-1201) - 12 flashcards
             { front: "What connector is standard for modern mobile charging?", back: "USB-C", category: "mobile" },
             { front: "What does OLED improve in mobile displays?", back: "Organic Light-Emitting Diode, better color and efficiency", category: "mobile" },
             { front: "What protocol syncs email across devices?", back: "IMAP (Internet Message Access Protocol)", category: "mobile" },
@@ -563,8 +590,6 @@
             { front: "What sensor detects device orientation?", back: "Gyroscope", category: "mobile" },
             { front: "What battery type powers most mobiles?", back: "Li-ion (Lithium-ion)", category: "mobile" },
             { front: "What manages mobile devices in an org?", back: "MDM (Mobile Device Management)", category: "mobile" },
-
-            // Core 1: Networking (220-1201) - 12 flashcards
             { front: "What port does HTTPS use?", back: "Port 443", category: "networking" },
             { front: "What does DHCP assign?", back: "IP addresses dynamically", category: "networking" },
             { front: "What is a VPN used for?", back: "Secure remote network access", category: "networking" },
@@ -577,8 +602,6 @@
             { front: "What maps private IPs to public?", back: "NAT (Network Address Translation)", category: "networking" },
             { front: "What cable supports 40 Gbps over 30m?", back: "CAT8", category: "networking" },
             { front: "What identifies a wireless network?", back: "SSID (Service Set Identifier)", category: "networking" },
-
-            // Core 1: Hardware (220-1201) - 12 flashcards
             { front: "What powers PC components?", back: "PSU (Power Supply Unit), converts AC to DC", category: "hardware" },
             { front: "What is NVMe used for?", back: "High-speed SSD interface over PCIe", category: "hardware" },
             { front: "What connects a GPU to a monitor?", back: "HDMI, DisplayPort, or DVI", category: "hardware" },
@@ -591,8 +614,6 @@
             { front: "What is a compact SSD form factor?", back: "M.2", category: "hardware" },
             { front: "What holds the processor?", back: "CPU Socket (e.g., LGA)", category: "hardware" },
             { front: "What cools the CPU?", back: "Heatsink", category: "hardware" },
-
-            // Core 1: Virtualization and Cloud (220-1201) - 11 flashcards
             { front: "What manages virtual machines?", back: "Hypervisor (e.g., VMware, Hyper-V)", category: "virt-cloud" },
             { front: "What is SaaS?", back: "Software as a Service, e.g., cloud apps", category: "virt-cloud" },
             { front: "What is a hybrid cloud?", back: "Mix of public and private cloud resources", category: "virt-cloud" },
@@ -604,8 +625,6 @@
             { front: "What is a shared cloud resource?", back: "Public Cloud", category: "virt-cloud" },
             { front: "What is a dedicated cloud?", back: "Private Cloud", category: "virt-cloud" },
             { front: "What is Type 2 Hypervisor?", back: "Runs on top of an OS", category: "virt-cloud" },
-
-            // Core 1: Troubleshooting (220-1201) - 11 flashcards
             { front: "First step if a PC won’t boot?", back: "Check power connections", category: "troubleshooting" },
             { front: "What causes a CPU to overheat?", back: "Dust, failed fans, or bad thermal paste", category: "troubleshooting" },
             { front: "How to fix no Wi-Fi signal?", back: "Check adapter, signal strength, interference", category: "troubleshooting" },
@@ -617,8 +636,6 @@
             { front: "What if the network drops?", back: "Test cable or signal", category: "troubleshooting" },
             { front: "How to fix an overheating GPU?", back: "Clean fans or reapply paste", category: "troubleshooting" },
             { front: "What if a device isn’t recognized?", back: "Check cables or drivers", category: "troubleshooting" },
-
-            // Core 2: Operating Systems (220-1202) - 11 flashcards
             { front: "Windows command for network info?", back: "ipconfig", category: "os" },
             { front: "Linux command to change permissions?", back: "chmod", category: "os" },
             { front: "What does 'sfc /scannow' do?", back: "Scans and repairs Windows system files", category: "os" },
@@ -630,22 +647,18 @@
             { front: "Linux command for superuser access?", back: "sudo", category: "os" },
             { front: "What traces a network route?", back: "tracert", category: "os" },
             { front: "What shows running processes?", back: "Task Manager", category: "os" },
-
-            // Core 2: Security (220-1202) - 12 flashcards
             { front: "What is phishing?", back: "Fraudulent emails to steal data", category: "security" },
             { front: "What does MFA add to security?", back: "Multi-Factor Authentication, extra verification", category: "security" },
             { front: "What is a DDoS attack?", back: "Floods a server to disrupt service", category: "security" },
             { front: "What encrypts a Windows drive?", back: "BitLocker", category: "security" },
             { front: "What is AI’s role in security?", back: "Detects threats using pattern analysis", category: "security" },
-            { front: "What locks data for ransom?", back: "Ransomware", category: "security" },
+            { front: "What Locks data for ransom?", back: "Ransomware", category: "security" },
             { front: "What encrypts network traffic?", back: "SSL/TLS", category: "security" },
             { front: "What records keystrokes?", back: "Keylogger", category: "security" },
             { front: "What tries all password combos?", back: "Brute Force", category: "security" },
             { front: "What blocks unauthorized access?", back: "Firewall", category: "security" },
             { front: "What manipulates users for info?", back: "Social Engineering", category: "security" },
             { front: "What secures remote connections?", back: "VPN", category: "security" },
-
-            // Core 2: Software Troubleshooting (220-1202) - 11 flashcards
             { front: "What causes a BSOD?", back: "Driver or hardware failure", category: "soft-trouble" },
             { front: "How to fix a slow PC?", back: "Check disk space, malware, or resource usage", category: "soft-trouble" },
             { front: "What does 'DISM' repair?", back: "Windows system image", category: "soft-trouble" },
@@ -657,8 +670,6 @@
             { front: "How to fix low memory issues?", back: "Close apps or add RAM", category: "soft-trouble" },
             { front: "How to fix a corrupt file?", back: "Replace or repair it", category: "soft-trouble" },
             { front: "What tool monitors performance?", back: "Performance Monitor", category: "soft-trouble" },
-
-            // Core 2: Operational Procedures (220-1202) - 10 flashcards
             { front: "First step in troubleshooting?", back: "Identify the problem", category: "ops" },
             { front: "What protects against ESD?", back: "Anti-static wrist strap", category: "ops" },
             { front: "What is a UPS?", back: "Uninterruptible Power Supply, backup power", category: "ops" },
@@ -672,7 +683,6 @@
         ];
 
         const matchingPairs = [
-            // Core 1: Mobile Devices (220-1201) - 12 items
             { term: "USB-C", definition: "Standard for modern mobile charging", category: "mobile" },
             { term: "OLED", definition: "Improves display color and efficiency", category: "mobile" },
             { term: "IMAP", definition: "Syncs email across devices", category: "mobile" },
@@ -685,8 +695,6 @@
             { term: "Gyroscope", definition: "Detects device orientation", category: "mobile" },
             { term: "Li-ion Battery", definition: "Common rechargeable power source", category: "mobile" },
             { term: "MDM", definition: "Manages mobile devices remotely", category: "mobile" },
-
-            // Core 1: Networking (220-1201) - 12 items
             { term: "HTTPS", definition: "Uses port 443 for secure web", category: "networking" },
             { term: "DHCP", definition: "Assigns IP addresses dynamically", category: "networking" },
             { term: "VPN", definition: "Secures remote network access", category: "networking" },
@@ -699,8 +707,6 @@
             { term: "NAT", definition: "Maps private IPs to public", category: "networking" },
             { term: "CAT8", definition: "Supports 40 Gbps over 30 meters", category: "networking" },
             { term: "SSID", definition: "Identifies a wireless network", category: "networking" },
-
-            // Core 1: Hardware (220-1201) - 12 items
             { term: "PSU", definition: "Converts AC to DC for components", category: "hardware" },
             { term: "NVMe", definition: "High-speed SSD over PCIe", category: "hardware" },
             { term: "GPU Connection", definition: "HDMI, DisplayPort, or DVI", category: "hardware" },
@@ -713,8 +719,6 @@
             { term: "M.2", definition: "Compact SSD form factor", category: "hardware" },
             { term: "CPU Socket", definition: "Holds processor (e.g., LGA)", category: "hardware" },
             { term: "Heatsink", definition: "Dissipates CPU heat", category: "hardware" },
-
-            // Core 1: Virtualization and Cloud (220-1201) - 10 items
             { term: "Hypervisor", definition: "Manages virtual machines", category: "virt-cloud" },
             { term: "SaaS", definition: "Delivers software via the cloud", category: "virt-cloud" },
             { term: "Hybrid Cloud", definition: "Mixes public and private clouds", category: "virt-cloud" },
@@ -725,8 +729,6 @@
             { term: "Type 1 Hypervisor", definition: "Runs directly on hardware", category: "virt-cloud" },
             { term: "Public Cloud", definition: "Shared cloud resources", category: "virt-cloud" },
             { term: "Private Cloud", definition: "Dedicated cloud for one org", category: "virt-cloud" },
-
-            // Core 1: Troubleshooting (220-1201) - 10 items
             { term: "No Boot", definition: "Check power connections", category: "troubleshooting" },
             { term: "CPU Overheating", definition: "Dust, failed fans, or bad paste", category: "troubleshooting" },
             { term: "No Wi-Fi", definition: "Check adapter or interference", category: "troubleshooting" },
@@ -737,8 +739,6 @@
             { term: "Blue Light", definition: "Check power supply status", category: "troubleshooting" },
             { term: "Network Drop", definition: "Test cable or signal", category: "troubleshooting" },
             { term: "Overheating GPU", definition: "Clean fans or reapply paste", category: "troubleshooting" },
-
-            // Core 2: Operating Systems (220-1202) - 10 items
             { term: "ipconfig", definition: "Shows network info in Windows", category: "os" },
             { term: "chmod", definition: "Changes Linux file permissions", category: "os" },
             { term: "sfc /scannow", definition: "Repairs Windows system files", category: "os" },
@@ -749,8 +749,6 @@
             { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
             { term: "sudo", definition: "Runs commands as superuser", category: "os" },
             { term: "tracert", definition: "Traces network route", category: "os" },
-
-            // Core 2: Security (220-1202) - 12 items
             { term: "Phishing", definition: "Fraudulent email attack", category: "security" },
             { term: "MFA", definition: "Adds extra security verification", category: "security" },
             { term: "DDoS", definition: "Overwhelms a server", category: "security" },
@@ -763,8 +761,6 @@
             { term: "Firewall", definition: "Blocks unauthorized access", category: "security" },
             { term: "Social Engineering", definition: "Manipulates users for info", category: "security" },
             { term: "VPN Security", definition: "Secures remote connections", category: "security" },
-
-            // Core 2: Software Troubleshooting (220-1202) - 10 items
             { term: "BSOD", definition: "Caused by driver or hardware issues", category: "soft-trouble" },
             { term: "Slow PC", definition: "Check disk space or malware", category: "soft-trouble" },
             { term: "DISM", definition: "Repairs Windows system image", category: "soft-trouble" },
@@ -775,8 +771,6 @@
             { term: "App Crash", definition: "Check logs or reinstall", category: "soft-trouble" },
             { term: "Low Memory", definition: "Close apps or add RAM", category: "soft-trouble" },
             { term: "Corrupt File", definition: "Replace or repair file", category: "soft-trouble" },
-
-            // Core 2: Operational Procedures (220-1202) - 10 items
             { term: "Troubleshooting Step 1", definition: "Identify the problem", category: "ops" },
             { term: "ESD Protection", definition: "Anti-static wrist strap", category: "ops" },
             { term: "UPS", definition: "Provides backup power", category: "ops" },
@@ -790,7 +784,6 @@
         ];
 
         const explanations = {
-            // Core 1: Mobile Devices
             "USB-C": "The Universal Serial Bus Type-C connector is widely used for charging modern mobile devices because it’s small, reversible, and supports fast data transfer and power delivery.",
             "OLED": "Organic Light-Emitting Diode displays use organic materials to emit light, offering better color accuracy and energy efficiency for mobile screens.",
             "IMAP": "Internet Message Access Protocol keeps emails synchronized across multiple devices by storing them on a server, ideal for mobile use.",
@@ -803,8 +796,6 @@
             "Gyroscope": "A gyroscope detects a device’s orientation, enabling features like screen rotation or motion gaming.",
             "Li-ion Battery": "Lithium-ion batteries are rechargeable and power most mobile devices due to their high energy density.",
             "MDM": "Mobile Device Management allows remote control and security enforcement on mobile devices in an organization.",
-
-            // Core 1: Networking
             "HTTPS": "HyperText Transfer Protocol Secure uses port 443 to encrypt web traffic, ensuring safe browsing.",
             "DHCP": "Dynamic Host Configuration Protocol assigns unique network addresses to devices automatically, simplifying network setup.",
             "VPN": "A Virtual Private Network creates a secure connection over the internet, protecting data when accessing networks remotely.",
@@ -817,8 +808,6 @@
             "NAT": "Network Address Translation maps private IP addresses to a public one, allowing multiple devices to share an internet connection.",
             "CAT8": "Category 8 cable supports data speeds up to 40 gigabits per second over short distances, used in high-performance networks.",
             "SSID": "Service Set Identifier is the name of a wireless network, helping users identify and connect to it.",
-
-            // Core 1: Hardware
             "PSU": "The Power Supply Unit converts alternating current from the wall into direct current to power computer components.",
             "NVMe": "Non-Volatile Memory Express boosts solid-state drive speeds by using the Peripheral Component Interconnect Express interface.",
             "GPU Connection": "Graphics Processing Units connect to monitors using cables like High-Definition Multimedia Interface, DisplayPort, or Digital Visual Interface.",
@@ -831,8 +820,6 @@
             "M.2": "M.2 is a compact form factor for solid-state drives, offering fast storage in small devices.",
             "CPU Socket": "A CPU socket, like Land Grid Array, physically holds and connects the processor to the motherboard.",
             "Heatsink": "A heatsink dissipates heat from the CPU, preventing overheating during operation.",
-
-            // Core 1: Virtualization and Cloud
             "Hypervisor": "A hypervisor runs virtual machines by managing resources on a single physical computer, enabling multiple operating systems.",
             "SaaS": "Software as a Service provides applications over the internet, like email or document editors, without local installation.",
             "Hybrid Cloud": "A hybrid cloud blends public internet-based services with private dedicated resources for flexibility and security.",
@@ -843,8 +830,6 @@
             "Type 1 Hypervisor": "A Type 1 hypervisor runs directly on hardware, offering efficient virtual machine management.",
             "Public Cloud": "Public cloud services provide shared resources over the internet, accessible to multiple users.",
             "Private Cloud": "A private cloud is dedicated to one organization, offering secure and exclusive resource access.",
-
-            // Core 1: Troubleshooting
             "No Boot": "If a computer won’t start, checking power connections ensures electricity is reaching the system.",
             "CPU Overheating": "Overheating occurs when dust blocks airflow or cooling systems fail, risking damage to the processor.",
             "No Wi-Fi": "No wireless signal might mean a disabled adapter, weak signal, or interference from other devices.",
@@ -855,8 +840,6 @@
             "Blue Light": "A blue power light might indicate a power supply issue, needing further checks.",
             "Network Drop": "Intermittent network loss could stem from a faulty cable or weak wireless signal.",
             "Overheating GPU": "A hot graphics card may need fan cleaning or new thermal paste to cool down.",
-
-            // Core 2: Operating Systems
             "ipconfig": "The ipconfig command in Windows displays network settings, helping you troubleshoot connectivity issues.",
             "chmod": "The chmod command in Linux adjusts who can read, write, or run a file, controlling access.",
             "sfc /scannow": "System File Checker scans and fixes corrupted Windows files to restore system stability.",
@@ -867,8 +850,6 @@
             "chkdsk": "Check Disk scans and repairs disk errors to maintain storage reliability.",
             "sudo": "The sudo command in Linux runs tasks with superuser privileges for administrative control.",
             "tracert": "Traceroute traces the path data takes to a network destination, identifying delays.",
-
-            // Core 2: Security
             "Phishing": "Phishing tricks users into giving away sensitive information through fake emails pretending to be legitimate.",
             "MFA": "Multi-Factor Authentication requires multiple proofs of identity, like a password and a phone code, for better protection.",
             "DDoS": "A Distributed Denial of Service attack floods a server with traffic to make it unavailable to users.",
@@ -881,8 +862,6 @@
             "Firewall": "A firewall blocks unauthorized network access, protecting systems from external threats.",
             "Social Engineering": "Social engineering manipulates users into revealing confidential information through deception.",
             "VPN Security": "A Virtual Private Network secures remote connections by encrypting data over the internet.",
-
-            // Core 2: Software Troubleshooting
             "BSOD": "A Blue Screen of Death signals a critical Windows error, often from incompatible drivers or hardware faults.",
             "Slow PC": "A slow computer might be due to limited disk space, malware, or high resource usage, needing investigation.",
             "DISM": "Deployment Image Servicing and Management fixes the Windows system image when standard repairs fail.",
@@ -893,8 +872,6 @@
             "App Crash": "An application crash might need log checks or reinstallation to fix corrupted files.",
             "Low Memory": "Low memory issues can be fixed by closing apps or adding more RAM to the system.",
             "Corrupt File": "A corrupt file may need replacement or repair to restore functionality.",
-
-            // Core 2: Operational Procedures
             "Troubleshooting Step 1": "Identifying the problem is the first step in solving any technical issue systematically.",
             "ESD Protection": "An anti-static wrist strap prevents electrostatic discharge from damaging sensitive electronics.",
             "UPS": "An Uninterruptible Power Supply keeps devices running during outages, preventing data loss.",
