@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CompTIA A+ Annihilator Game (New A+ Updated)</title>
+    <title>Doyle's PocketA+ Annihilator Game (New A+ Updated)</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -431,14 +431,14 @@
 <body>
     <div id="access-prompt">
         <div>
-            <h2>Stick It In: Enter Your A+ Access Code From Gumroad:</h2>
+            <h2>Enter Your A+ Access Code From Gumroad:</h2>
             <input type="text" id="access-code" placeholder="Drop that code, champ!" aria-label="Enter access code">
-            <button onclick="verifyAccess()">Unlock the A+ Annihilator!</button>
+            <button onclick="verifyAccess()">Unlock Doyle's PocketA+ Annihilator!</button>
             <p id="error-message">Wrong code, try again!</p>
         </div>
     </div>
     <div class="container hidden" id="game-content">
-        <h1>CompTIA A+ Annihilator Game (New A+ Updated)</h1>
+        <h1>Doyle's PocketA+ Annihilator Game (New A+ Updated)</h1>
         <div class="mode-toggle">
             <button id="flashcard-btn" onclick="showFlashcards()" aria-label="Switch to Flashcard Mode">Flashcard Mode</button>
             <button id="matching-btn" onclick="showMatching()" aria-label="Switch to Matching Mode">Matching Mode</button>
@@ -468,8 +468,7 @@
                 <button class="hardware" data-category="hardware" onclick="switchCategory('hardware')">Hardware</button>
                 <button class="virt-cloud" data-category="virt-cloud" onclick="switchCategory('virt-cloud')">Virt/Cloud</button>
                 <button class="troubleshooting" data-category="troubleshooting" onclick="switchCategory('troubleshooting')">Troubleshooting</button>
-                <div class="core2-header">Core 2 (220-1202)</div>
-                <button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
+                <div class="core2-header">Core 2 (220-		<button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
                 <button class="security" data-category="security" onclick="switchCategory('security')">Security</button>
                 <button class="soft-trouble" data-category="soft-trouble" onclick="switchCategory('soft-trouble')">Software Trouble</button>
                 <button class="ops" data-category="ops" onclick="switchCategory('ops')">Ops</button>
@@ -523,7 +522,7 @@
             isSubmitting = true;
 
             const code = document.getElementById("access-code")?.value.trim();
-            const correctCode = "A+IsMyBitch69!";
+            const correctCode = "DoyleFromTikTok";
             const errorMessage = document.getElementById("error-message");
 
             console.log("Entered code:", code);
@@ -723,7 +722,7 @@
             { term: "regedit", definition: "Edits Windows registry", category: "os" },
             { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
             { term: "sudo", definition: "Runs commands as superuser", category: "os" },
-            { term: "tracert", definition: "Traces network route", category: "os" },
+            { term  { term: "tracert", definition: "Traces network route", category: "os" },
             { term: "Phishing", definition: "Fraudulent email attack", category: "security" },
             { term: "MFA", definition: "Adds extra security verification", category: "security" },
             { term: "DDoS", definition: "Overwhelms a server", category: "security" },
