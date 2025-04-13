@@ -468,7 +468,8 @@
                 <button class="hardware" data-category="hardware" onclick="switchCategory('hardware')">Hardware</button>
                 <button class="virt-cloud" data-category="virt-cloud" onclick="switchCategory('virt-cloud')">Virt/Cloud</button>
                 <button class="troubleshooting" data-category="troubleshooting" onclick="switchCategory('troubleshooting')">Troubleshooting</button>
-                <div class="core2-header">Core 2 (220-		<button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
+                <div class="core2-header">Core 2 (220-1202)</div>
+                <button class="os" data-category="os" onclick="switchCategory('os')">OS</button>
                 <button class="security" data-category="security" onclick="switchCategory('security')">Security</button>
                 <button class="soft-trouble" data-category="soft-trouble" onclick="switchCategory('soft-trouble')">Software Trouble</button>
                 <button class="ops" data-category="ops" onclick="switchCategory('ops')">Ops</button>
@@ -545,8 +546,10 @@
             }
         }
 
-        document.getElementById("access-code")?.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
+        document.getElementById("access-code")?.addEventListener("keydown", function(event) {
+            console.log("Key pressed:", event.key, event.code);
+            if (event.key === "Enter" || event.code === "Enter") {
+                event.preventDefault(); // Prevent form submission or other default behaviors
                 verifyAccess();
             }
         });
@@ -722,7 +725,7 @@
             { term: "regedit", definition: "Edits Windows registry", category: "os" },
             { term: "chkdsk", definition: "Checks and fixes disk errors", category: "os" },
             { term: "sudo", definition: "Runs commands as superuser", category: "os" },
-            { term  { term: "tracert", definition: "Traces network route", category: "os" },
+            { term: "tracert", definition: "Traces network route", category: "os" },
             { term: "Phishing", definition: "Fraudulent email attack", category: "security" },
             { term: "MFA", definition: "Adds extra security verification", category: "security" },
             { term: "DDoS", definition: "Overwhelms a server", category: "security" },
